@@ -1,0 +1,38 @@
+.damageDisplay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  /* width: 500px; */
+  height: 140px;
+  padding: 20px;
+  background: rgba(0,0,0, 0.8); 
+  transform: translateX(0px);
+  transition: transform 0.1s;
+  width: 1024px;
+  box-sizing: border-box;
+}
+.healthBarOuter {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  height: 20px;
+  background: #000;
+  overflow: hidden;
+}
+.healthBarInner {
+  position: absolute;
+  height: 20px;
+  background: #f00;
+  transition: width 0.4s ease-out;
+  display: flex;
+}
+.hitDmg {
+  position: absolute;
+  height: 20px;
+  background: #ffffffd1;
+}
+.healthText {
+  position: relative;
+  left: 4px;
+  top: 1px;
+}
