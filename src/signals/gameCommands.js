@@ -1,4 +1,4 @@
-import { command, damage, enemyHealth, gameEffect, level, problem } from "."
+import { attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from "."
 import { generateProblem } from "../utils/utils"
 
 export const idle = () => {
@@ -7,6 +7,7 @@ export const idle = () => {
 
 export const attack = (action, dmg) => {
   if (command.value.type === 'idle') {
+    resetAttackTimer()
     command.value = { type: action, value: dmg }
   }
 }
@@ -57,4 +58,12 @@ export const clearDamage = () => {
 
 export const newProblem = () => {
   problem.value = generateProblem()
+}
+
+export const startAttackTimer = () => {
+  attackTimer.value = { state: 'running', duration: attackTimer.peek().duration, startTime: new Date().getTime() }
+}
+
+export const resetAttackTimer = () => {
+  attackTimer.value = { state: 'reset', duration: attackTimer.peek().duration, startTime: new Date().getTime() }
 }

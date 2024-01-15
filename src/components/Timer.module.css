@@ -1,0 +1,49 @@
+.timerContainer {
+  position: absolute;
+  top: 150px;
+  left: 120px;
+  background: red;
+}
+.timerOuter {
+  position: absolute;
+  background: green;
+  height: 300px;
+  width: 20px;
+}
+.timerInner {
+  display: flex;
+  background: yellow;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+}
+.timerSegment {
+  border-bottom: 1px solid #000;
+  flex: 1;
+  width: 100%;
+}
+.timerIndicator {
+  position: absolute;
+  background: blue;
+  border-radius: 100%;
+  top: 0%;
+  left: -20px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+}
+.animate {
+  animation-name: goDown;
+  animation-duration: 4000ms;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
+}
+
+@keyframes goDown {
+  from {
+    top: 0%;
+  }
+  to {
+    top: 100%;
+  }
+}

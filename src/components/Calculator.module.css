@@ -1,7 +1,7 @@
 .calculator {
   position: absolute;
-  top: 410px;
-  left: 550px;
+  top: 280px;
+  left: 500px;
   height: 512px;
   padding: 20px;
   background: url("calc.png");

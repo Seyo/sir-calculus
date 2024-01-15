@@ -2,8 +2,9 @@ import { useSignals } from '@preact/signals-react/runtime'
 import { command, enemyHealth, level, problem } from '../signals'
 import style from './Calculator.module.css'
 import { effect, useSignal } from '@preact/signals-react'
-import { attack, clearDamage, newProblem } from '../signals/gameCommands'
+import { attack, clearDamage, newProblem, startAttackTimer } from '../signals/gameCommands'
 import { useEffect, useRef } from 'react'
+import { Timer } from './Timer'
 
 export const Calculator = () => {
   useSignals()
@@ -53,10 +54,11 @@ export const Calculator = () => {
         clear()
         if(!fullHealth) {
           // new problem received after first hit
-          console.log('START COUNTDOWN')
+          //console.log('START COUNTDOWN')
+          startAttackTimer()
         } else {
           // first problem on startup
-          console.log('INITIAL PROBLEM')
+          //console.log('INITIAL PROBLEM')
         }
       } else {
         //New problem received during level loading
@@ -78,6 +80,7 @@ export const Calculator = () => {
         {displayProblem && <div className={style.problem}>{problem.value.text}</div>}
         {displayCorrect && <div className={style.correct}></div>}
         {displayError && <div className={style.error}></div>}
+        <Timer />
         <div className={style.input}>{output.value}</div>
         <div className={style.keypad} style={displayProblem ? {} : { opacity: 0.2 }}>
           <div onClick={onClick('7')} className={style.button}>
