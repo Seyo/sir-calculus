@@ -1,12 +1,11 @@
 
-import { command, gameEffect } from '../signals'
+import { command } from '../signals'
 import style from './GameController.module.css'
-import { useEffect, useRef,  } from 'react'
 import { useSignals } from '@preact/signals-react/runtime'
-import { attack, clearDamage, reset } from '../signals/gameCommands'
+import { attack, clearDamage } from '../signals/gameCommands'
 export const GameController = () => {
   useSignals();
-  const onClick = (action) => (e) => {
+  const onClick = (action) => () => {
     if (command.value.type === 'idle') {
       clearDamage()
       attack(action, 20)

@@ -20,7 +20,7 @@ export const hitAttack = () => {
 }
 
 
-export const finishDamage = (dmg) => {
+export const finishDamage = () => {
   damage.value = {
     state: 'done', hits: damage.value.hits
   }
@@ -32,7 +32,7 @@ export const finishDamage = (dmg) => {
     total: enemyHealth.value.total,
     current: newHealth > 0 ? newHealth : 0
   }
-  
+
   if(newHealth <= 0 ) {
     setTimeout(() => {
       level.value = { current: level.value.current + 1, state: 'loading' }

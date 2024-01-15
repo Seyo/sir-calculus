@@ -5,7 +5,7 @@ export const command = signal({type:'idle'})
 export const gameEffect = signal('')
 export const damage = signal({state: 'idle', hits:[]})
 
-export const enemyHealth = signal({total: 30, current: 30})
+export const enemyHealth = signal({total: 20, current: 20})
 export const level = signal({current: 1, state: 'loaded'})
 
 export const problem = signal(generateProblem())
