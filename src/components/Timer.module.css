@@ -12,24 +12,38 @@
 }
 .timerInner {
   display: flex;
-  background: yellow;
+  background: rgb(255, 255, 255);
   flex-direction: column;
   align-items: stretch;
   height: 100%;
+  box-shadow: 3px 3px 0px #4a4238 inset;
+  border-right: 3px solid #e8e3dc;
+  border-bottom: 3px solid #e8e3dc;
 }
 .timerSegment {
-  border-bottom: 1px solid #000;
   flex: 1;
   width: 100%;
 }
+.timerSegment:nth-child(1) {
+  background: rgb(27, 161, 27);
+  mix-blend-mode: darken;
+}
+.timerSegment:nth-child(2) {
+  background: rgb(211, 129, 23);
+  mix-blend-mode: darken;
+}
+.timerSegment:nth-child(3) {
+  background: rgb(153, 17, 17);
+  mix-blend-mode: darken;
+}
 .timerIndicator {
   position: absolute;
-  background: blue;
+  background: url("sword_indicator.png");
   border-radius: 100%;
   top: 0%;
-  left: -20px;
-  width: 20px;
-  height: 20px;
+  left: 0px;
+  width: 56px;
+  height: 18px;
   transform: translateY(-50%);
 }
 .animate {

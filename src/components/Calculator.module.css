@@ -71,13 +71,13 @@
 
 .button {
   font-size: 24px;
-  height: 66px;
+  height: 64px;
+  width: 64px;
   text-align: center;
   padding-top: 10px;
   box-sizing: border-box;
   cursor: pointer;
   border: 5px solid #413a3c;
-  background-color: #888482;
-  transition: background-color 0.3s;
+  background: #888482;
   color: #000;
 }

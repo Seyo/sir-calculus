@@ -2,13 +2,14 @@
   position: absolute;
   top: 0px;
   left: 1024px;
-  height: 200px;
+  /* //height: 200px; */
   padding: 20px;
   background: rgba(255,255,255, 0.2);
   transform: translateX(0px);
   transition: transform 0.1s;
-  width: 200px;
+  width: 300px;
   box-sizing: border-box;
+  text-shadow: 1px 1px 0px #000;
 }
 .button {
   background: #000;

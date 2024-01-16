@@ -42,7 +42,7 @@ export const finishDamage = () => {
 
     setTimeout(() => {
       level.value = { current: level.value.current, state: 'loaded' }
-      const newTotal = (enemyHealth.value.total * 1.01).toFixed(0)
+      const newTotal = (enemyHealth.value.total * 1.05).toFixed(0)
       enemyHealth.value = {
         total: newTotal,
         current: newTotal
@@ -57,7 +57,7 @@ export const clearDamage = () => {
 }
 
 export const newProblem = () => {
-  problem.value = generateProblem()
+  problem.value = generateProblem(level.peek().current)
 }
 
 export const startAttackTimer = () => {
@@ -66,4 +66,15 @@ export const startAttackTimer = () => {
 
 export const resetAttackTimer = () => {
   attackTimer.value = { state: 'reset', duration: attackTimer.peek().duration, startTime: new Date().getTime() }
+}
+
+export const increaseDuration = () => {
+  const dur = attackTimer.peek().duration
+  const newDur = dur * 1.1 > 20000 ? 20000 : (dur * 1.1).toFixed(0)
+  attackTimer.value = { state: attackTimer.peek().state, duration: newDur, startTime: new Date().getTime() }
+}
+export const decreaseDuration = () => {
+  const dur = attackTimer.peek().duration
+  const newDur = (dur - (0.1 * dur)) < 5000 ? 5000 : (dur - (0.1 * dur)).toFixed(0)
+  attackTimer.value = { state: attackTimer.peek().state, duration: newDur, startTime: new Date().getTime() }
 }
