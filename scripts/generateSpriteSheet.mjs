@@ -18,7 +18,7 @@ const generateWhiteOut = (image, alpha) => {
   return mask
 }
 
-const handleImage = async (imgSrc, shadowOrig) => {
+const handleImage = async (imgSrc, shadowOrig, idx) => {
   let image = await new Jimp(64 * 5, 64, 'transparent', (err, image) => {
     if (err) throw err;
   });
@@ -29,6 +29,10 @@ const handleImage = async (imgSrc, shadowOrig) => {
         //.greyscale() // set greyscale
         .contrast(0.1)
         .autocrop({ tolerance: 0 });
+
+      if (imgSrc.includes('flip')) {
+        cropped.flip(true, false)
+      }
 
       //Remove white background
       cropped.scan(0, 0, cropped.bitmap.width, cropped.bitmap.height, function (x, y, idx) {
@@ -84,7 +88,7 @@ const handleImage = async (imgSrc, shadowOrig) => {
       image.blit(forthWhite, xPlacement + (64 * 4) + 1, yPlacement)
 
       return image
-        .write(folderPathOut + imgSrc); // save
+        .write(folderPathOut + 'mech_' + idx+'.png'); // save
     })
     .catch((err) => {
       console.error(err);
@@ -102,8 +106,8 @@ fs.readdir(folderPath, async (err, files) => {
   console.log('Filenames in the folder:', files);
 
   const shadow = await Jimp.read('scripts/shadow.png')
-  files.map(file => {
-    handleImage(file, shadow)
+  files.map((file, idx) => {
+    handleImage(file, shadow, idx)
   })
   // let image = await new Jimp(64 * 5, 64, 'transparent', (err, image) => {
   //   if (err) throw err;
