@@ -1,19 +1,19 @@
 import { useSignals } from '@preact/signals-react/runtime'
-import { attackTimer, command, enemyHealth, level, problem } from '../signals'
+import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../signals'
 import style from './Calculator.module.css'
 import { effect, useSignal } from '@preact/signals-react'
 import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer } from '../signals/gameCommands'
 import { useEffect, useRef } from 'react'
 import { Timer } from './Timer'
 
-const reportResult = (type, formula, answer, level, attackTimerPeek) => {
+const reportResult = (type, formula, answer, level, attackTimerPeek, attackDurationPeek) => {
   const recordTime = new Date()
-  if (attackTimerPeek) {
-    const time = type === 'correct' ? recordTime.getTime() - attackTimerPeek.startTime : attackTimerPeek.duration
-    const timeRatio = type === 'correct' ? time / attackTimerPeek.duration : -1
-    console.log(type, formula, answer, level, time, timeRatio)
+  if (attackTimerPeek && attackDurationPeek) {
+    const time = type === 'correct' ? recordTime.getTime() - attackTimerPeek.startTime : attackDurationPeek.duration
+    const timeRatio = type === 'correct' ? time / attackDurationPeek.duration : -1
+    //console.log(type, formula, answer, level, time, timeRatio)
   } else {
-    console.log(type, formula, answer, level)
+    //console.log(type, formula, answer, level)
   }
 }
 
@@ -29,8 +29,8 @@ export const Calculator = () => {
   // const countDownStartTime = useSignal(new Date())
   // const runAnimation = useSignal(false)
 
-  const fail = () => {
-    resetAttackTimer()
+  const fail = (timeout) => {
+    !timeout && resetAttackTimer()
     error.value = true
     loading.value = true
     setTimeout(() => {
@@ -54,14 +54,21 @@ export const Calculator = () => {
     output.value += num
     const answerString = '' + problem.value.answer
     if (output.value.length === answerString.length) {
+      
+      const attackTimerPeek = attackTimer.peek()
+      const attackDurationPeek = attackDuration.peek()
+      const problemPeek = problem.peek()
+      const levelPeek = level.peek()
+
       if (problem.value.answer === parseInt(output.value)) {
-        const { startTime, duration, state } = attackTimer.peek()
+        const { startTime, state } = attackTimerPeek
+        const { duration } = attackDurationPeek
         clearDamage()
         if (state === 'running') {
           const responseTime = new Date().getTime() - startTime
           const timePercentage = responseTime / duration
 
-          reportResult('correct', problem.peek().text, problem.value.answer, level.peek().current, attackTimer.peek())
+          reportResult('correct', problemPeek.text, problem.value.answer, levelPeek.current, attackTimerPeek, attackDurationPeek)
           if (timePercentage >= 0.66) {
             attack('attack1', problem.value.answer)
           } else if (timePercentage >= 0.33) {
@@ -72,11 +79,11 @@ export const Calculator = () => {
             decreaseDuration()
           }
         } else {
-          reportResult('correct', problem.peek().text, problem.value.answer, level.peek().current)
+          reportResult('correct', problemPeek.text, problem.value.answer, levelPeek.current)
           attack('attack1', problem.value.answer)
         }
       } else {
-        reportResult('wrong', problem.peek().text, output.value, level.peek().current, attackTimer.peek())
+        reportResult('wrong', problemPeek.text, output.value, levelPeek.current, attackTimerPeek, attackDurationPeek)
         fail()
       }
     }
@@ -97,7 +104,7 @@ export const Calculator = () => {
     timerRef.current = effect(() => {
       if (attackTimer.value.state === 'miss') {
         reportResult('timeout', problem.peek().text, 'N/A', level.peek().current, attackTimer.peek())
-        fail()
+        fail(true)
       }
     })
     effectRef.current = effect(() => {
@@ -107,12 +114,13 @@ export const Calculator = () => {
       const fullHealth = eHealthPeek.current === eHealthPeek.total
       const levelPeek = level.peek()
       const levelLoaded = levelPeek.state === 'loaded'
+      const attackTimePeek = attackTimer.peek()
 
       if (levelLoaded) {
         clear()
         if (!fullHealth) {
           // new problem received after first hit
-          startAttackTimer()
+          attackTimePeek.state === 'init' && startAttackTimer()
         } else {
           // first problem on startup
         }

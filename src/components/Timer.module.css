@@ -25,15 +25,15 @@
   width: 100%;
 }
 .timerSegment:nth-child(1) {
-  background: rgb(27, 161, 27);
+  background: #1ba11b;
   mix-blend-mode: darken;
 }
 .timerSegment:nth-child(2) {
-  background: rgb(211, 129, 23);
+  background: #d38117;
   mix-blend-mode: darken;
 }
 .timerSegment:nth-child(3) {
-  background: rgb(153, 17, 17);
+  background: #991111;
   mix-blend-mode: darken;
 }
 .timerIndicator {

@@ -1,4 +1,4 @@
-import { attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from "."
+import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from "."
 import { generateProblem } from "../utils/utils"
 
 export const idle = () => {
@@ -61,20 +61,20 @@ export const newProblem = () => {
 }
 
 export const startAttackTimer = () => {
-  attackTimer.value = { state: 'running', duration: attackTimer.peek().duration, startTime: new Date().getTime() }
+  attackTimer.value = { state: 'running', startTime: new Date().getTime() }
 }
 
 export const resetAttackTimer = () => {
-  attackTimer.value = { state: 'reset', duration: attackTimer.peek().duration, startTime: new Date().getTime() }
+  attackTimer.value = { state: 'reset', startTime: new Date().getTime() }
 }
 
 export const increaseDuration = () => {
-  const dur = attackTimer.peek().duration
+  const dur = attackDuration.peek().duration
   const newDur = dur * 1.1 > 20000 ? 20000 : (dur * 1.1).toFixed(0)
-  attackTimer.value = { state: attackTimer.peek().state, duration: newDur, startTime: new Date().getTime() }
+  attackDuration.value = { duration: newDur}
 }
 export const decreaseDuration = () => {
-  const dur = attackTimer.peek().duration
+  const dur = attackDuration.peek().duration
   const newDur = (dur - (0.1 * dur)) < 5000 ? 5000 : (dur - (0.1 * dur)).toFixed(0)
-  attackTimer.value = { state: attackTimer.peek().state, duration: newDur, startTime: new Date().getTime() }
+  attackDuration.value = { duration: newDur }
 }

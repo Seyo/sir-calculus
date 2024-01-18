@@ -10,7 +10,8 @@ export const level = signal({ current: 1, state: 'loaded' })
 
 export const problem = signal(generateProblem(1))
 
-export const attackTimer = signal({ state: 'init', duration: 10000, startTime: new Date().getTime() })
+export const attackTimer = signal({ state: 'init', startTime: new Date().getTime() })
+export const attackDuration = signal({ duration: 10000 })
 
 // hit effect
 effect(() => {
@@ -25,19 +26,26 @@ effect(() => {
 //Timer effect
 let timeout = null
 effect(() => {
-  const { duration } = attackTimer.peek()
+  const { duration } = attackDuration.peek()
   const { state } = attackTimer.value
+  
   if (state === 'running') {
+
     timeout = setTimeout(() => {
-      attackTimer.value = { state: 'miss', duration: duration, startTime: new Date().getTime() }
+
+      attackTimer.value = { state: 'miss', startTime: new Date().getTime() }
     }, duration);
 
   } else if (state === 'reset') {
+
     clearTimeout(timeout)
-    attackTimer.value = { state: 'init', duration: duration, startTime: new Date().getTime() }
+    attackTimer.value = { state: 'init', startTime: new Date().getTime() }
+
   } else if (state === 'miss') {
+
     timeout = setTimeout(() => {
-      attackTimer.value = { state: 'init', duration: duration, startTime: new Date().getTime() }
+      attackTimer.value = { state: 'init-miss', startTime: new Date().getTime() }
     }, 250);
+
   }
 })

@@ -1,5 +1,5 @@
 
-import { attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from '../signals'
+import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from '../signals'
 import style from './GameController.module.css'
 import { useSignals } from '@preact/signals-react/runtime'
 import { attack, clearDamage } from '../signals/gameCommands'
@@ -54,7 +54,7 @@ export const GameController = () => {
         attackTimer state: {attackTimer.value.state}
       </div>
       <div>
-        attackTimer duration: {attackTimer.value.duration}
+        attackDuration duration: {attackDuration.value.duration}
       </div>
     </div>
   </>

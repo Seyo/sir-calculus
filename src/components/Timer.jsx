@@ -1,4 +1,4 @@
-import { attackTimer } from '../signals'
+import { attackDuration, attackTimer } from '../signals'
 import style from  './Timer.module.css'
 export const Timer = () => {
   return <>
@@ -9,7 +9,7 @@ export const Timer = () => {
           <div className={style.timerSegment}></div>
           <div className={style.timerSegment}></div>
         </div>
-        <div className={`${style.timerIndicator} ${attackTimer.value.state === 'running' ? style.animate : ''}`} style={{animationDuration: `${attackTimer.value.duration}ms`}}></div>
+        <div className={`${style.timerIndicator} ${attackTimer.value.state === 'running' ? style.animate : ''}`} style={{animationDuration: `${attackDuration.value.duration}ms`}}></div>
       </div>
     </div>
   </>
