@@ -6,9 +6,9 @@ export const createActors = (scene) => {
   const enemy = scene.add.sprite(375, 316, 'calculator')
 
   scene.anims.createFromAseprite('player')
-  const player = scene.add.sprite(PLAYER_START_X, 304, 'player')
+  const player = scene.add.sprite(PLAYER_START_X, 328, 'player')
 
-  player.setScale(SCALE)
+  player.setScale(SCALE/2)
   enemy.setScale(SCALE / 2, SCALE / 2)
 
   registerAnimationListeners(player, enemy)

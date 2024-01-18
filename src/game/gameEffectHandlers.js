@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { effect } from '@preact/signals-react'
 import { command, enemyHealth, level } from '../signals'
-import { playHitEnemy, playIdle, playIdleEnemy, playMoveAndAttack1, playMoveAndAttack2, playMoveAndAttack3, playMoveAndAttack4, playReset } from './animationHandlers'
+import { playHitEnemy, playIdle, playIdleEnemy, playMoveAndAttack1, playMoveAndAttack2, playMoveAndAttack3, playReset } from './animationHandlers'
 import { setRandomBackground } from './worldHandler'
 
 export const setupCommandEffects = (player) => {
@@ -14,8 +14,6 @@ export const setupCommandEffects = (player) => {
       playMoveAndAttack2(player)
     } else if (command.value.type === 'attack3') {
       playMoveAndAttack3(player)
-    } else if (command.value.type === 'attack4') {
-      playMoveAndAttack4(player)
     } else if (command.value.type === 'reset') {
       playReset(player)
     }

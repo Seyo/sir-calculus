@@ -44,7 +44,7 @@ export const Calculator = () => {
 
   const win = () => {
     clearDamage()
-    attack('attack4', problem.value.answer)
+    attack('attack3', problem.value.answer)
     decreaseDuration()
   }
 
@@ -54,7 +54,7 @@ export const Calculator = () => {
     output.value += num
     const answerString = '' + problem.value.answer
     if (output.value.length === answerString.length) {
-      
+
       const attackTimerPeek = attackTimer.peek()
       const attackDurationPeek = attackDuration.peek()
       const problemPeek = problem.peek()
@@ -75,7 +75,7 @@ export const Calculator = () => {
             attack('attack2', problem.value.answer)
             decreaseDuration()
           } else if (timePercentage >= 0) {
-            attack('attack4', problem.value.answer)
+            attack('attack3', problem.value.answer)
             decreaseDuration()
           }
         } else {

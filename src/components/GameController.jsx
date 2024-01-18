@@ -19,7 +19,6 @@ export const GameController = () => {
       <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack1')}>Hit me</div>
       <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack2')}>Hit me harder</div>
       <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack3')}>Hit me even harder</div>
-      <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack4')}>Hit me with jump!</div>
       <div>
         Level current: {level.value.current}
       </div>

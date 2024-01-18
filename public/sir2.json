@@ -449,6 +449,7 @@
   ],
   "layers": [
    { "name": "Flattened", "opacity": 255, "blendMode": "normal" },
+   { "name": "shadow", "opacity": 80, "blendMode": "normal" },
    { "name": "shuoulder-behind", "opacity": 255, "blendMode": "normal" },
    { "name": "Head", "opacity": 255, "blendMode": "normal" },
    { "name": "shoulder-front", "opacity": 255, "blendMode": "normal" },
@@ -456,7 +457,7 @@
    { "name": "hand behind", "group": "Swordhands", "opacity": 255, "blendMode": "normal" },
    { "name": "Sword", "group": "Swordhands", "opacity": 255, "blendMode": "normal" },
    { "name": "hand front", "group": "Swordhands", "opacity": 255, "blendMode": "normal" },
-   { "name": "VFX", "opacity": 255, "blendMode": "normal" }
+   { "name": "VFX", "opacity": 198, "blendMode": "normal" }
   ],
   "slices": [
   ]

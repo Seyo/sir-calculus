@@ -27,19 +27,15 @@ export const playMoveAndAttack1 = (p) => {
 }
 export const playMoveAndAttack2 = (p) => {
   p.play({ key: 'move', repeat: 0 })
-  p.chain('attack2')
+  p.chain(['attack1','attack2'])
   playReturn(p, true)
 }
 export const playMoveAndAttack3 = (p) => {
   p.play({ key: 'move', repeat: 0 })
-  p.chain(['attack1', 'attack2'])
+  p.chain(['attack1', 'attack2', 'attack3'])
   playReturn(p, true)
 }
-export const playMoveAndAttack4 = (p) => {
-  p.play({ key: 'move', repeat: 0 })
-  p.chain('attack3')
-  playReturn(p, true)
-}
+
 
 export const playHitEnemy = (e) => {
   e.play({ key: 'hit_enemy', repeat: 0 })
@@ -88,7 +84,7 @@ export const registerAnimationListeners = (player, enemy) => {
     }
     if (anim.key === 'attack2') {
       const frame = player.anims.currentFrame.index
-      if (frame === 5 || frame === 9) {
+      if (frame === 6) {
         hitAttack()
         enemy.play({ key: 'hit_enemy', repeat: 0 })
         enemy.chain({ key: 'idle_enemy', repeat: -1 })
@@ -96,7 +92,7 @@ export const registerAnimationListeners = (player, enemy) => {
     }
     if (anim.key === 'attack3') {
       const frame = player.anims.currentFrame.index
-      if (frame === 5 || frame === 9 || frame === 19) {
+      if (frame === 8) {
         hitAttack()
         enemy.play({ key: 'hit_enemy', repeat: 0 })
         enemy.chain({ key: 'idle_enemy', repeat: -1 })
