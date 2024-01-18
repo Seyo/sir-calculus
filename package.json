@@ -13,6 +13,7 @@
     "@preact/signals": "^1.2.2",
     "@preact/signals-react": "^2.0.0",
     "bitecs": "^0.3.40",
+    "jimp": "^0.22.10",
     "phaser": "^3.70.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

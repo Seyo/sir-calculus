@@ -1,3 +1,4 @@
+import { backgroundImage } from "../signals"
 import { getRandomInt } from "../utils/utils"
 
 export const backgroundImages = [
@@ -51,10 +52,10 @@ export const setRandomBackground = (bg) => {
 }
 
 export const buildWorld = (scene) => {
-  const bg = scene.add.image(0, 0, 'bg_true_00001')
-  setRandomBackground(bg)
-  bg.setScale(4)
-  bg.setOrigin(0, 0)
+  backgroundImage.value = scene.add.image(0, 0, 'bg_true_00001')
+  setRandomBackground(backgroundImage.value)
+  backgroundImage.value.setScale(4)
+  backgroundImage.value.setOrigin(0, 0)
 
   const blackWall = scene.add.rectangle(0, 400, 1024, 400, 0x000000)
   blackWall.setOrigin(0, 0)
@@ -74,5 +75,5 @@ export const buildWorld = (scene) => {
   // g1.setScale(2)
 
 
-  return { bg, blackWall }
+  return { }
 }

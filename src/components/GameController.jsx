@@ -1,8 +1,9 @@
 
-import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from '../signals'
+import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem, playerSprite, enemySprite } from '../signals'
 import style from './GameController.module.css'
 import { useSignals } from '@preact/signals-react/runtime'
-import { attack, clearDamage } from '../signals/gameCommands'
+import { attack, changeEnemy, clearDamage, move } from '../signals/gameCommands'
+import { MOVE_IN_ANIM_REPEATS } from '../game/gameConstants'
 export const GameController = () => {
   useSignals();
   const onClick = (action) => () => {
@@ -13,12 +14,25 @@ export const GameController = () => {
       //reset()
     }
   }
+  const test = (type) => () => {
+    if(type === 'testMove') {
+      move(MOVE_IN_ANIM_REPEATS)
+      enemySprite.value.setActive(true).setVisible(true)
+      console.log(enemySprite.value)
+    }
+    if(type === 'jumptest') {
+      playerSprite.value.play('jumpback')
+      changeEnemy()
+    }
+  }
 
   return <>
     <div className={style.GameController}>
       <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack1')}>Hit me</div>
       <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack2')}>Hit me harder</div>
       <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={onClick('attack3')}>Hit me even harder</div>
+      <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={test('testMove')}>Move</div>
+      <div className={style.button} style={command.value.type !== 'idle' ? { opacity: 0.2 } : {}} onClick={test('jumptest')}>Jump</div>
       <div>
         Level current: {level.value.current}
       </div>

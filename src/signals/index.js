@@ -13,6 +13,13 @@ export const problem = signal(generateProblem(1))
 export const attackTimer = signal({ state: 'init', startTime: new Date().getTime() })
 export const attackDuration = signal({ duration: 10000 })
 
+export const backgroundImage = signal(null)
+export const playerSprite = signal(null)
+export const enemySprite = signal(null)
+
+export const enemies = signal([])
+export const currentEnemy = signal('')
+
 // hit effect
 effect(() => {
   if (gameEffect.value === 'hit') {
@@ -28,7 +35,7 @@ let timeout = null
 effect(() => {
   const { duration } = attackDuration.peek()
   const { state } = attackTimer.value
-  
+
   if (state === 'running') {
 
     timeout = setTimeout(() => {

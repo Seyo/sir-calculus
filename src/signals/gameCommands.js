@@ -1,4 +1,5 @@
-import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from "."
+import { attackDuration, attackTimer, command, currentEnemy, damage, enemies, enemyHealth, enemySprite, gameEffect, level, problem } from "."
+import { ENEMIES_LIST } from "../game/gameConstants"
 import { generateProblem } from "../utils/utils"
 
 export const idle = () => {
@@ -12,12 +13,33 @@ export const attack = (action, dmg) => {
   }
 }
 
+export const move = (repeats) => {
+  if (command.value.type === 'idle') {
+    command.value = { type: 'move', value: repeats }
+  }
+}
+
 export const reset = () => {
   command.value = { type: 'reset' }
 }
 
 export const hitAttack = () => {
   gameEffect.value = 'hit'
+}
+
+export const changeEnemy = () => {
+  const curr = currentEnemy.value
+  const indexOfCurrent = enemies.value.findIndex((e) => {
+    
+    return e.texture.key === curr
+  })
+  const nextEnemy = enemies.value.length -1 > indexOfCurrent ? indexOfCurrent + 1 : 0
+  enemies.value.forEach(e => {
+    e.setActive(false).setVisible(false)
+  })
+  currentEnemy.value = ENEMIES_LIST[nextEnemy]
+  enemySprite.value = enemies.value[nextEnemy]
+  enemySprite.value.setActive(true).setVisible(true)
 }
 
 

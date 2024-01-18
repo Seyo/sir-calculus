@@ -9,12 +9,12 @@ import { createActors } from '../game/actorHandlers'
 function generatePhaserCreate(gameCommandsEffect, enemyHealthEffect, gameLevelEffect) {
   return function () {
     const { bg } = buildWorld(this)
-    const { player, enemy } = createActors(this)
+    createActors(this)
 
     //listen to signals from React component and internal
-    gameCommandsEffect.value = setupCommandEffects(player)
-    enemyHealthEffect.value = setupEnemyHealthEffects(enemy)
-    gameLevelEffect.value = setupGameLevelEffects(this, bg, enemy)
+    gameCommandsEffect.value = setupCommandEffects()
+    enemyHealthEffect.value = setupEnemyHealthEffects()
+    gameLevelEffect.value = setupGameLevelEffects(this, bg)
   }
 }
 
