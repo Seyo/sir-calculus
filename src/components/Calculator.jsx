@@ -2,7 +2,7 @@ import { useSignals } from '@preact/signals-react/runtime'
 import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../signals'
 import style from './Calculator.module.css'
 import { effect, useSignal } from '@preact/signals-react'
-import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../signals/gameCommands'
+import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult, toggleMenu } from '../signals/gameCommands'
 import { useEffect, useRef } from 'react'
 import { Timer } from './Timer'
 import { getRandomInt } from '../utils/utils'
@@ -33,7 +33,7 @@ export const Calculator = () => {
   // const countDownStartTime = useSignal(new Date())
   // const runAnimation = useSignal(false)
 
-  const fail = (timeout) => {
+  const fail = () => {
     resetAttackTimer(true)
     error.value = true
     loading.value = true
@@ -46,10 +46,13 @@ export const Calculator = () => {
     }, 2000)
   }
 
-  const win = () => {
-    clearDamage()
-    attack('attack3', problem.value.answer)
-    decreaseDuration()
+  // const win = () => {
+  //   clearDamage()
+  //   attack('attack3', problem.value.answer)
+  //   decreaseDuration()
+  // }
+  const goToMenu = () => {
+      toggleMenu()
   }
 
   const onClick = (num) => () => {
@@ -165,6 +168,7 @@ export const Calculator = () => {
       window.removeEventListener('keypress', handleKeyPress)
       effectRef.current()
       timerRef.current()
+      clearTimeout(debugRef.current)
       clearTimeout(startAttackDelayRef.current)
     }
   }, [])
@@ -215,7 +219,7 @@ export const Calculator = () => {
           <div onClick={clear} className={style.button}>
             C
           </div>
-          {/* <div onClick={win} className={style.button} style={{ backgroundImage: 'url(sword.png)', backgroundPosition: '-6px -4px' }}>          </div> */}
+          <div onClick={goToMenu} className={style.button} style={{ backgroundImage: 'url(sword.png)', backgroundPosition: '-6px -4px' }}>          </div>
         </div>
       </div>
     </>

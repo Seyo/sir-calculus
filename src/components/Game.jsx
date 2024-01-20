@@ -5,21 +5,27 @@ import { useSignal } from '@preact/signals-react'
 import { buildWorld } from '../game/worldHandler'
 import { setupCommandEffects, setupEnemyHealthEffects, setupGameLevelEffects } from '../game/gameEffectHandlers'
 import { createActors } from '../game/actorHandlers'
+import { game } from '../signals'
 
 function generatePhaserCreate(gameCommandsEffect, enemyHealthEffect, gameLevelEffect) {
-  return function () {
-    const { bg } = buildWorld(this)
-    createActors(this)
+  return function (scene) {
+    buildWorld(scene)
+    const {p} = createActors(scene)
 
     //listen to signals from React component and internal
-    gameCommandsEffect.value = setupCommandEffects()
+    gameCommandsEffect.value && gameCommandsEffect.value()
+    enemyHealthEffect.value && enemyHealthEffect.value()
+    gameLevelEffect.value && gameLevelEffect.value()
+
+    gameCommandsEffect.value = setupCommandEffects(p)
     enemyHealthEffect.value = setupEnemyHealthEffects()
-    gameLevelEffect.value = setupGameLevelEffects(this, bg)
+    gameLevelEffect.value = setupGameLevelEffects()
+    
   }
 }
 
 export const Game = () => {
-  const game = useSignal(null)
+  //const game = useSignal(null)
   const gameCommandsEffect = useSignal(null)
   const enemyHealthEffect = useSignal(null)
   const gameLevelEffect = useSignal(null)

@@ -1,6 +1,29 @@
-import { attackDuration, attackTimer, command, currentEnemy, damage, enemies, enemyHealth, enemySprite, gameEffect, level, problem, results } from "."
+import { attackDuration, attackTimer, command, damage, enemyHealth, game, gameEffect, gameScene, level, problem, results, sceneKey } from "."
 import { ENEMIES_LIST } from "../game/gameConstants"
 import { generateProblem } from "../utils/utils"
+
+export const toggleMenu = () => {
+
+  const scene = game.peek()?.scene
+
+  const isPaused = scene.isPaused('MenuScene');
+  if (false === isPaused) {
+    scene.pause('MenuScene');
+  } else {
+    scene.resume('MenuScene');
+    sceneKey.value = 'MenuScene'
+  }
+
+  const isNull = scene.getScene('GameScene');
+  if (null === isNull) {
+    scene.add('GameScene', gameScene.peek(), true);
+    sceneKey.value = 'GameScene'
+  } else {
+    scene.remove('GameScene');
+  }
+
+}
+
 
 export const idle = () => {
   if(command.peek().type !== 'idle') {
@@ -30,18 +53,33 @@ export const hitAttack = () => {
 }
 
 export const changeEnemy = () => {
-  const curr = currentEnemy.value
-  const indexOfCurrent = enemies.value.findIndex((e) => {
-    
-    return e.texture.key === curr
+  const scene = game.peek()?.scene
+  const gameScene = scene.getScene('GameScene');
+  const children = gameScene.children.getChildren()
+  const e = children.find(c => c.name === 'enemy')
+  const indexOfCurrent = ENEMIES_LIST.findIndex((en) => {
+    return en === e.texture.key
   })
-  const nextEnemy = enemies.value.length -1 > indexOfCurrent ? indexOfCurrent + 1 : 0
-  enemies.value.forEach(e => {
-    e.setActive(false).setVisible(false)
-  })
-  currentEnemy.value = ENEMIES_LIST[nextEnemy]
-  enemySprite.value = enemies.value[nextEnemy]
-  enemySprite.value.setActive(true).setVisible(true)
+  const nextEnemy = ENEMIES_LIST.length -1 > indexOfCurrent ? indexOfCurrent + 1 : 0
+  const nextEnemyTextureKey = ENEMIES_LIST[nextEnemy]
+
+  e.anims.remove('hit_enemy')
+  e.anims.remove('idle_enemy')
+
+  e.setTexture(nextEnemyTextureKey)
+  e.anims.create({
+    key: 'hit_enemy',
+    frames: gameScene.anims.generateFrameNames(nextEnemyTextureKey, { frames: [1, 2, 3, 4] }),
+    frameRate: 12,
+    repeat: 0
+  });
+  e.anims.create({
+    key: 'idle_enemy',
+    frames: gameScene.anims.generateFrameNames(nextEnemyTextureKey, { frames: [0] }),
+    frameRate: 12,
+    repeat: -1
+  });
+
 }
 
 

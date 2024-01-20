@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
 import { finishDamage, hitAttack, idle } from '../signals/gameCommands'
 import { ATTACK_DISTANCE, JUMP_FRAME_COUNT, MOVE_FRAME_COUNT, PLAYER_START_X } from './gameConstants'
-import { enemySprite, playerSprite } from '../signals'
+import { playerSprite, game } from '../signals'
 
 export const playIdle = () => {
   const p = playerSprite.peek()
-  if (p.anims.currentAnim.key !== 'idle') {
+  if (p?.anims.currentAnim.key !== 'idle') {
     p.play({ key: 'idle', repeat: -1 })
     p.chain()
   }
@@ -30,7 +30,7 @@ export const playMove = (repeat = 0) => {
 }
 
 export const playMoveAndAttack1 = () => {
-  const p = playerSprite.value
+  const p = playerSprite.peek()
   p.play({ key: 'move', repeat: 1 })
   p.chain('attack1')
   playReturn(true)
@@ -48,14 +48,21 @@ export const playMoveAndAttack3 = () => {
   playReturn(true)
 }
 
+const getEnemy = () => {
+  const scene = game.peek()?.scene
+  const gameScene = scene.getScene('GameScene');
+  const children = gameScene.children.getChildren()
+  const e = children.find(c => c.name === 'enemy')
+  return e
+}
 
 export const playHitEnemy = () => {
-  const e = enemySprite.value
+  const e = getEnemy()
   e.play({ key: 'hit_enemy', repeat: 0 })
   e.chain({ key: 'idle_enemy', repeat: -1 })
 }
 export const playIdleEnemy = () => {
-  const e = enemySprite.value
+  const e = getEnemy()
   e.play({ key: 'idle_enemy', repeat: -1 })
 }
 
@@ -80,9 +87,6 @@ export const registerAnimationListeners = () => {
       const jumpBackFrameDistance = distanceFromStart / JUMP_FRAME_COUNT
       p.jumpBackFrameDistance = jumpBackFrameDistance
     }
-    // if (anim.key === 'idle') {
-    //   idle()
-    // }
 
   })
 
@@ -101,21 +105,18 @@ export const registerAnimationListeners = () => {
       const frame = p.anims.currentFrame.index
       if (frame === 5) {
         hitAttack()
-        playHitEnemy()
       }
     }
     if (anim.key === 'attack2') {
       const frame = p.anims.currentFrame.index
       if (frame === 6) {
         hitAttack()
-        playHitEnemy()
       }
     }
     if (anim.key === 'attack3') {
       const frame = p.anims.currentFrame.index
       if (frame === 8) {
         hitAttack()
-        playHitEnemy()
       }
     }
   })

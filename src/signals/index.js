@@ -1,5 +1,6 @@
 import { effect, signal } from "@preact/signals-react";
 import { generateProblem } from "../utils/utils";
+import { playHitEnemy } from "../game/animationHandlers";
 
 export const command = signal({ type: 'idle' })
 export const gameEffect = signal('')
@@ -14,23 +15,33 @@ export const results = signal([])
 export const attackTimer = signal({ state: 'init', startTime: new Date().getTime() })
 export const attackDuration = signal({ duration: 10000 })
 
+export const game =  signal(null)
+export const sceneKey =  signal('MenuScene')
+export const gameScene = signal(null)
+export const menuScene = signal(null)
+
 export const backgroundImage = signal(null)
 export const foregroundImage = signal(null)
 export const playerSprite = signal(null)
-export const enemySprite = signal(null)
-
-export const enemies = signal([])
-export const currentEnemy = signal('')
 
 // hit effect
 effect(() => {
   if (gameEffect.value === 'hit') {
+    playHitEnemy()
     const currentHits = damage.peek()
     const currentCommand = command.peek()
     damage.value = { state: 'inProgress', hits: [...currentHits.hits, currentCommand.value] }
     setTimeout(() => { gameEffect.value = '' }, 100)
   }
 })
+
+// effect(() => {
+//   if (sceneKey.value && game.peek()) {
+//     console.log(sceneKey.value)
+//     const scenes = game.peek()?.scene.keys[sceneKey.value]
+//     console.log(scenes)
+//   }
+// })
 
 //Timer effect
 let timeout = null
