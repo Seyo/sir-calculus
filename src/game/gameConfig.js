@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { backgroundImages, getBgName } from './worldHandler'
+import { backgroundImages, foregroundImages, getBgName, getFgName } from './worldHandler'
 import { ENEMIES_LIST } from './gameConstants';
 
 function preload() {
@@ -11,6 +11,10 @@ function preload() {
   backgroundImages.forEach((bg) => {
     const bgName = getBgName(bg)
     this.load.image(bgName, bg)
+  })
+  foregroundImages.forEach((fg) => {
+    const fgName = getFgName(fg)
+    this.load.image(fgName, fg)
   })
   this.load.image('ground', '/ground1.png')
 }

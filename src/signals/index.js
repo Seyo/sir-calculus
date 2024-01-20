@@ -9,11 +9,13 @@ export const enemyHealth = signal({ total: 100, current: 100 })
 export const level = signal({ current: 1, state: 'loaded' })
 
 export const problem = signal(generateProblem(1))
+export const results = signal([])
 
 export const attackTimer = signal({ state: 'init', startTime: new Date().getTime() })
 export const attackDuration = signal({ duration: 10000 })
 
 export const backgroundImage = signal(null)
+export const foregroundImage = signal(null)
 export const playerSprite = signal(null)
 export const enemySprite = signal(null)
 
@@ -46,9 +48,19 @@ effect(() => {
   } else if (state === 'reset') {
 
     clearTimeout(timeout)
-    attackTimer.value = { state: 'init', startTime: new Date().getTime() }
+    timeout = setTimeout(() => {
+      attackTimer.value = { state: 'init', startTime: new Date().getTime() }
+    }, 250);
 
-  } else if (state === 'miss') {
+  } else if (state === 'reset-pause') {
+
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      attackTimer.value = { state: 'init-miss', startTime: new Date().getTime() }
+    }, 250);
+    
+  }  
+  else if (state === 'miss') {
 
     timeout = setTimeout(() => {
       attackTimer.value = { state: 'init-miss', startTime: new Date().getTime() }

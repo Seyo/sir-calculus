@@ -18,7 +18,6 @@ export const GameController = () => {
     if(type === 'testMove') {
       move(MOVE_IN_ANIM_REPEATS)
       enemySprite.value.setActive(true).setVisible(true)
-      console.log(enemySprite.value)
     }
     if(type === 'jumptest') {
       playerSprite.value.play('jumpback')

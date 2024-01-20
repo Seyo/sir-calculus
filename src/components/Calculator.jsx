@@ -2,18 +2,20 @@ import { useSignals } from '@preact/signals-react/runtime'
 import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../signals'
 import style from './Calculator.module.css'
 import { effect, useSignal } from '@preact/signals-react'
-import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer } from '../signals/gameCommands'
+import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../signals/gameCommands'
 import { useEffect, useRef } from 'react'
 import { Timer } from './Timer'
+import { getRandomInt } from '../utils/utils'
+const DEBUG = false
 
 const reportResult = (type, formula, answer, level, attackTimerPeek, attackDurationPeek) => {
   const recordTime = new Date()
   if (attackTimerPeek && attackDurationPeek) {
-    const time = type === 'correct' ? recordTime.getTime() - attackTimerPeek.startTime : attackDurationPeek.duration
-    const timeRatio = type === 'correct' ? time / attackDurationPeek.duration : -1
-    //console.log(type, formula, answer, level, time, timeRatio)
+    const time = recordTime.getTime() - attackTimerPeek.startTime
+    const timeRatio = type === 'correct' ? time / attackDurationPeek.duration : 1
+    storeResult({ type, formula, answer, level, time, timeRatio })
   } else {
-    //console.log(type, formula, answer, level)
+    storeResult({ type, formula, answer, level })
   }
 }
 
@@ -24,13 +26,15 @@ export const Calculator = () => {
   const error = useSignal(false)
   const effectRef = useRef()
   const timerRef = useRef()
+  const startAttackDelayRef = useRef()
+  const debugRef = useRef()
 
   // const duration = useSignal(10000)
   // const countDownStartTime = useSignal(new Date())
   // const runAnimation = useSignal(false)
 
   const fail = (timeout) => {
-    !timeout && resetAttackTimer()
+    resetAttackTimer(true)
     error.value = true
     loading.value = true
     setTimeout(() => {
@@ -60,8 +64,8 @@ export const Calculator = () => {
       const problemPeek = problem.peek()
       const levelPeek = level.peek()
 
+      const { startTime, state } = attackTimerPeek
       if (problem.value.answer === parseInt(output.value)) {
-        const { startTime, state } = attackTimerPeek
         const { duration } = attackDurationPeek
         clearDamage()
         if (state === 'running') {
@@ -83,7 +87,12 @@ export const Calculator = () => {
           attack('attack1', problem.value.answer)
         }
       } else {
-        reportResult('wrong', problemPeek.text, output.value, levelPeek.current, attackTimerPeek, attackDurationPeek)
+        if (state === 'running') {
+          reportResult('wrong', problemPeek.text, output.value, levelPeek.current, attackTimerPeek, attackDurationPeek)
+        } else {
+          reportResult('wrong', problemPeek.text, output.value, levelPeek.current)
+
+        }
         fail()
       }
     }
@@ -99,6 +108,21 @@ export const Calculator = () => {
     }
   }
 
+  const debug = (prob) => {
+    clearTimeout(debugRef.current)
+    const time = getRandomInt(500, 4900)
+    console.log('Will answer in', time, 'ms')
+    debugRef.current = setTimeout(() => {
+      const toss = 1//getRandomInt(0, 2)
+      if(toss) {
+        onClick(prob.answer)()
+      } else {
+        const ans = prob.answer + ''
+        ans.length === 1 ? onClick(9)() : onClick(99)()
+      }
+    }, time)
+  }
+
   useEffect(() => {
     window.addEventListener('keypress', handleKeyPress)
     timerRef.current = effect(() => {
@@ -109,30 +133,39 @@ export const Calculator = () => {
     })
     effectRef.current = effect(() => {
       const isIdle = command.value.type === 'idle'
-      if (!problem.value || !isIdle) return
+      if (!problem.peek() || !isIdle) return
       const eHealthPeek = enemyHealth.peek()
       const fullHealth = eHealthPeek.current === eHealthPeek.total
-      const levelPeek = level.peek()
+      const levelPeek = level.value
       const levelLoaded = levelPeek.state === 'loaded'
       const attackTimePeek = attackTimer.peek()
 
       if (levelLoaded) {
         clear()
-        if (!fullHealth) {
+        if (!fullHealth && eHealthPeek.current !== 0) {
           // new problem received after first hit
-          attackTimePeek.state === 'init' && startAttackTimer()
-        } else {
-          // first problem on startup
-        }
+          if(attackTimePeek.state === 'init') {
+
+            startAttackDelayRef.current = setTimeout(() => {
+              startAttackTimer()
+            }, 100);
+          } 
+        } 
       } else {
         //New problem received during level loading
         clear()
+      }
+      const displayProblem = levelPeek.state !== 'loading' && isIdle && !loading.value && (attackTimePeek.state.includes('init') || attackTimePeek.state.includes('running'))
+      DEBUG && console.log(displayProblem, eHealthPeek, levelPeek, loading.value, attackTimePeek, command.value, problem.peek())
+      if (displayProblem && DEBUG) {
+       debug(problem.value)
       }
     })
     return () => {
       window.removeEventListener('keypress', handleKeyPress)
       effectRef.current()
       timerRef.current()
+      clearTimeout(startAttackDelayRef.current)
     }
   }, [])
 
@@ -182,8 +215,7 @@ export const Calculator = () => {
           <div onClick={clear} className={style.button}>
             C
           </div>
-          <div onClick={win} className={style.button} style={{ backgroundImage: 'url(sword.png)', backgroundPosition: '-6px -4px' }}>
-          </div>
+          {/* <div onClick={win} className={style.button} style={{ backgroundImage: 'url(sword.png)', backgroundPosition: '-6px -4px' }}>          </div> */}
         </div>
       </div>
     </>

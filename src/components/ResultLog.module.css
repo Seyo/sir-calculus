@@ -1,0 +1,56 @@
+.resultLog {
+  position: absolute;
+  top: 454px;
+  width: 465px;
+  height: 327px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  overflow-y: scroll;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.resultLog::-webkit-scrollbar {
+  width: 0;
+  height:0;
+}
+
+.levelUp {
+  font-size: 12px;
+    height: 16px;
+    text-align: center;
+    color: #c1ffff;
+}
+
+.logItem {
+  font-size: 12px;
+  height: 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ffffff0a;
+}
+
+.level {
+  flex: 0 0 50px;
+}
+.formula {
+  flex: 1;
+}
+.time {
+  flex: 1;
+  text-align:right
+}
+.correct {
+  color: #1ba11b;
+}
+.wrong {
+  color: #d34343;
+}
+.time1 {
+  color: #1ba11b;
+}
+.time2 {
+  color: #d38117;
+}
+.time3 {
+  color: #991111;
+}

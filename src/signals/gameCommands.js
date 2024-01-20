@@ -1,9 +1,11 @@
-import { attackDuration, attackTimer, command, currentEnemy, damage, enemies, enemyHealth, enemySprite, gameEffect, level, problem } from "."
+import { attackDuration, attackTimer, command, currentEnemy, damage, enemies, enemyHealth, enemySprite, gameEffect, level, problem, results } from "."
 import { ENEMIES_LIST } from "../game/gameConstants"
 import { generateProblem } from "../utils/utils"
 
 export const idle = () => {
-  command.value = { type: 'idle' }
+  if(command.peek().type !== 'idle') {
+    command.value = { type: 'idle' }
+  }
 }
 
 export const attack = (action, dmg) => {
@@ -44,13 +46,14 @@ export const changeEnemy = () => {
 
 
 export const finishDamage = () => {
-  damage.value = {
-    state: 'done', hits: damage.value.hits
+  const dmg = {
+    state: 'done', hits: damage.peek().hits
   }
-  const sum = damage.value.hits.reduce((accumulator, currentValue) => {
+  damage.value = dmg
+  const sum = dmg.hits.reduce((accumulator, currentValue) => {
     return accumulator + currentValue;
   }, 0);
-  const newHealth = enemyHealth.value.current - sum
+  const newHealth = enemyHealth.peek().current - sum
   enemyHealth.value = {
     total: enemyHealth.value.total,
     current: newHealth > 0 ? newHealth : 0
@@ -82,12 +85,20 @@ export const newProblem = () => {
   problem.value = generateProblem(level.peek().current)
 }
 
+export const storeResult = (result) => {
+  results.value = [...results.peek(), result]
+}
+
 export const startAttackTimer = () => {
   attackTimer.value = { state: 'running', startTime: new Date().getTime() }
 }
 
-export const resetAttackTimer = () => {
-  attackTimer.value = { state: 'reset', startTime: new Date().getTime() }
+export const resetAttackTimer = (pause) => {
+  if(pause) {
+    attackTimer.value = { state: 'reset-pause', startTime: new Date().getTime() }
+  } else {
+    attackTimer.value = { state: 'reset', startTime: new Date().getTime() }
+  }
 }
 
 export const increaseDuration = () => {

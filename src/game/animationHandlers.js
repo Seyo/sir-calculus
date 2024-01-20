@@ -4,7 +4,7 @@ import { ATTACK_DISTANCE, JUMP_FRAME_COUNT, MOVE_FRAME_COUNT, PLAYER_START_X } f
 import { enemySprite, playerSprite } from '../signals'
 
 export const playIdle = () => {
-  const p = playerSprite.value
+  const p = playerSprite.peek()
   if (p.anims.currentAnim.key !== 'idle') {
     p.play({ key: 'idle', repeat: -1 })
     p.chain()
@@ -80,9 +80,9 @@ export const registerAnimationListeners = () => {
       const jumpBackFrameDistance = distanceFromStart / JUMP_FRAME_COUNT
       p.jumpBackFrameDistance = jumpBackFrameDistance
     }
-    if (anim.key === 'idle') {
-      idle()
-    }
+    // if (anim.key === 'idle') {
+    //   idle()
+    // }
 
   })
 
