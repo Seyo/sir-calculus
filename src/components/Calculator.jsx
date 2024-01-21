@@ -29,10 +29,6 @@ export const Calculator = () => {
   const startAttackDelayRef = useRef()
   const debugRef = useRef()
 
-  // const duration = useSignal(10000)
-  // const countDownStartTime = useSignal(new Date())
-  // const runAnimation = useSignal(false)
-
   const fail = () => {
     resetAttackTimer(true)
     error.value = true
@@ -43,16 +39,7 @@ export const Calculator = () => {
       clear()
       error.value = false
       loading.value = false
-    }, 2000)
-  }
-
-  // const win = () => {
-  //   clearDamage()
-  //   attack('attack3', problem.value.answer)
-  //   decreaseDuration()
-  // }
-  const goToMenu = () => {
-      toggleMenu()
+    }, 1000)
   }
 
   const onClick = (num) => () => {
@@ -117,7 +104,7 @@ export const Calculator = () => {
     console.log('Will answer in', time, 'ms')
     debugRef.current = setTimeout(() => {
       const toss = 1//getRandomInt(0, 2)
-      if(toss) {
+      if (toss) {
         onClick(prob.answer)()
       } else {
         const ans = prob.answer + ''
@@ -136,32 +123,32 @@ export const Calculator = () => {
     })
     effectRef.current = effect(() => {
       const isIdle = command.value.type === 'idle'
-      if (!problem.peek() || !isIdle) return
       const eHealthPeek = enemyHealth.peek()
       const fullHealth = eHealthPeek.current === eHealthPeek.total
       const levelPeek = level.value
       const levelLoaded = levelPeek.state === 'loaded'
       const attackTimePeek = attackTimer.peek()
+      const displayProblem = levelPeek.state !== 'loading' && isIdle && !loading.value && (attackTimePeek.state.includes('init') || attackTimePeek.state.includes('running')) && eHealthPeek.current !== 0
+      DEBUG && console.log(displayProblem, eHealthPeek, levelPeek, loading.value, attackTimePeek, command.value, problem.peek())
+      if (!problem.peek() || !isIdle) return
 
       if (levelLoaded) {
         clear()
         if (!fullHealth && eHealthPeek.current !== 0) {
           // new problem received after first hit
-          if(attackTimePeek.state === 'init') {
+          if (attackTimePeek.state === 'init') {
 
             startAttackDelayRef.current = setTimeout(() => {
               startAttackTimer()
             }, 100);
-          } 
-        } 
+          }
+        }
       } else {
         //New problem received during level loading
         clear()
       }
-      const displayProblem = levelPeek.state !== 'loading' && isIdle && !loading.value && (attackTimePeek.state.includes('init') || attackTimePeek.state.includes('running'))
-      DEBUG && console.log(displayProblem, eHealthPeek, levelPeek, loading.value, attackTimePeek, command.value, problem.peek())
       if (displayProblem && DEBUG) {
-       debug(problem.value)
+        debug(problem.value)
       }
     })
     return () => {
@@ -173,7 +160,7 @@ export const Calculator = () => {
     }
   }, [])
 
-  const displayProblem = level.value.state !== 'loading' && command.value.type === 'idle' && !loading.value
+  const displayProblem = level.value.state !== 'loading' && command.value.type === 'idle' && !loading.value && enemyHealth.value.current !== 0
   const displayCorrect = command.value.type !== 'idle'
   const displayError = error.value
 
@@ -219,7 +206,7 @@ export const Calculator = () => {
           <div onClick={clear} className={style.button}>
             C
           </div>
-          <div onClick={goToMenu} className={style.button} style={{ backgroundImage: 'url(sword.png)', backgroundPosition: '-6px -4px' }}>          </div>
+          {/* <div onClick={goToMenu} className={style.button} style={{ backgroundImage: 'url(/sword.png)', backgroundPosition: '-6px -4px' }}>          </div> */}
         </div>
       </div>
     </>

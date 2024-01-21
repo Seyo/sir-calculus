@@ -10,17 +10,10 @@ export const playIdle = () => {
     p.chain()
   }
 }
-export const playReset = () => {
-  playReturn()
-}
 
-export const playReturn = (chain) => {
+export const playReturn = () => {
   const p = playerSprite.value
-  if (chain) {
-    return p.chain([{ key: 'jumpback', repeat: 0 }])
-  } else {
-    return p.play({ key: 'jumpback', repeat: 0 })
-  }
+  return p.chain([{ key: 'jumpback', repeat: 0 }])
 }
 
 export const playMove = (repeat = 0) => {
@@ -43,7 +36,7 @@ export const playMoveAndAttack2 = () => {
 }
 export const playMoveAndAttack3 = () => {
   const p = playerSprite.value
-  p.play({ key: 'move', repeat: 2 })
+  p.play({ key: 'move', repeat: 1 })
   p.chain(['attack1', 'attack2', 'attack3'])
   playReturn(true)
 }
@@ -86,6 +79,9 @@ export const registerAnimationListeners = () => {
       const distanceFromStart = p.x - PLAYER_START_X
       const jumpBackFrameDistance = distanceFromStart / JUMP_FRAME_COUNT
       p.jumpBackFrameDistance = jumpBackFrameDistance
+    }
+    if (anim.key === 'idle') {
+      idle()
     }
 
   })

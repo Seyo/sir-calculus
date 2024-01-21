@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "clean": "call scripts/clean-gh-dir.bat",
+    "copy": "call scripts/copy-gh-page.bat",
+    "commit-gh-page": "call scripts/commit-and-run.bat",
+    "deploy": "npm run build && npm run clean && npm run copy && npm run commit-gh-page",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

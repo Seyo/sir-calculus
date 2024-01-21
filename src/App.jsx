@@ -12,7 +12,7 @@ function App() {
   let content = <div><MainMenu /></div>
   if (sceneKey.value === 'GameScene') {
     content = <div>
-      <GameController />
+      {/* <GameController /> */}
       <DamageDisplay />
       <Calculator />
       <ResultLog />

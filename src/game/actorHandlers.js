@@ -1,9 +1,9 @@
 import Phaser from 'phaser'
 import { playerSprite } from "../signals"
 import { registerAnimationListeners } from "./animationHandlers"
-import { ENEMIES_LIST, PLAYER_START_X, SCALE } from "./gameConstants"
+import { ENEMIES_LIST, PLAYER_START_X, PLAYER_START_Y, SCALE } from "./gameConstants"
 
-export const createActors = (scene) => {
+const createEnemy = (scene) => {
 
   const enemiesList = ENEMIES_LIST
   const e = new Phaser.GameObjects.Sprite(scene, 375, 316, enemiesList[0]);
@@ -22,12 +22,22 @@ export const createActors = (scene) => {
     frameRate: 12,
     repeat: -1
   });
-  
-  const p = scene.add.sprite(PLAYER_START_X, 328, 'player')
+  return e
+}
+
+const createPlayer = (scene) => {
+  const p = scene.add.sprite(PLAYER_START_X, PLAYER_START_Y, 'player')
   p.anims.createFromAseprite('player')
   p.setScale(SCALE)
 
   playerSprite.value = p
+  return p
+}
+
+export const createActors = (scene) => {
+  const e = createEnemy(scene)
+  const p = createPlayer(scene)
+  
   registerAnimationListeners(p)
 
   p.play({ key: 'idle', repeat: -1 })

@@ -1,4 +1,5 @@
 export const PLAYER_START_X = 150
+export const PLAYER_START_Y = 328
 export const MOVE_FRAME_COUNT = 4
 export const JUMP_FRAME_COUNT = 3
 export const SCALE = 3

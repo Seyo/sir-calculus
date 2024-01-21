@@ -38,7 +38,7 @@
 }
 .timerIndicator {
   position: absolute;
-  background: url("sword_indicator.png");
+  background: url("/sword_indicator.png");
   border-radius: 100%;
   top: 0%;
   left: 0px;

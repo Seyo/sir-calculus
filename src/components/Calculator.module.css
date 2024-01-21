@@ -4,7 +4,7 @@
   left: 500px;
   height: 512px;
   padding: 20px;
-  background: url("calc.png");
+  background: url("/calc.png");
   background-size: 512px;
   transform: translateX(0px);
   transition: transform 0.1s;
@@ -45,7 +45,7 @@
   left: 73px;
   height: 64px;
   width: 64px;
-  background: url("check.png");
+  background: url("/check.png");
   background-size: 64px;
 }
 .error {
@@ -54,7 +54,7 @@
   left: 73px;
   height: 64px;
   width: 64px;
-  background: url("wrong.png");
+  background: url("/wrong.png");
   background-size: 64px;
 }
 
