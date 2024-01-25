@@ -17,14 +17,15 @@ const handleUpdateJumpback = (p: customSpriteType) => {
 }
 
 const handleUpdateAttack = (p: Phaser.GameObjects.Sprite) => {
-  const hitFrameLookup = {
-    attack1: 5,
-    attack2: 6,
-    attack3: 8
-  }
-  const frame = p.anims.currentFrame?.index || -1
-  const animationKey = p.anims.currentAnim?.key || 'not-set'
-  if (frame === hitFrameLookup[animationKey]) {
+  const hitFrameLookup: { [key: string]: number} = {
+    'attack1': 5,
+    'attack2': 6,
+    'attack3': 8
+  } 
+  const frame: number = p.anims.currentFrame?.index || -1
+  const animationKey: string = p.anims.currentAnim?.key || 'not-set'
+  const lookUpValue: number = hitFrameLookup[animationKey]
+  if (frame === lookUpValue) {
     hitAttack()
   }
 

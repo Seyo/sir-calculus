@@ -8,6 +8,6 @@ module.exports = {
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     'react-hooks/exhaustive-deps': 0,
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn'
   },
 }

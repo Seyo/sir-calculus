@@ -6,7 +6,7 @@ import { attack, changeEnemy, clearDamage, move } from '../signals/gameCommands'
 import { MOVE_IN_ANIM_REPEATS } from '../game/gameConstants'
 export const GameController = () => {
   useSignals();
-  const onClick = (action) => () => {
+  const onClick = (action: string) => () => {
     if (command.value.type === 'idle') {
       clearDamage()
       attack(action, 20)
@@ -14,7 +14,7 @@ export const GameController = () => {
       //reset()
     }
   }
-  const test = (type) => () => {
+  const test = (type: string) => () => {
     if(type === 'testMove') {
       move(MOVE_IN_ANIM_REPEATS)
     }

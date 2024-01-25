@@ -43,7 +43,7 @@ const createPlayer = (scene: Phaser.Scene): customSpriteType => {
   return p
 }
 
-export const createActors = (scene) => {
+export const createActors = (scene: Phaser.Scene) => {
   const e = createEnemy(scene)
   const p = createPlayer(scene)
 

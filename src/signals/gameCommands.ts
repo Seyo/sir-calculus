@@ -2,6 +2,7 @@ import { attackDuration, attackTimer, command, damage, enemyHealth, game, gameEf
 
 import { ENEMIES_LIST } from "../game/gameConstants"
 import { getEnemy } from "../game/gameEntities"
+import { resultType } from "../types"
 import { generateProblem } from "../utils/utils"
 
 export const toggleMenu = () => {
@@ -10,7 +11,7 @@ export const toggleMenu = () => {
   const gameScenePeek = gameScene.peek()
   if (!(g && gameScenePeek)) return;
   const scene = game.peek()?.scene
-  if(!scene) return
+  if (!scene) return
 
   const isPaused = scene.isPaused('MenuScene');
   if (false === isPaused) {
@@ -32,19 +33,19 @@ export const toggleMenu = () => {
 
 
 export const idle = () => {
-  if(command.peek().type !== 'idle') {
+  if (command.peek().type !== 'idle') {
     command.value = { type: 'idle', value: 0 }
   }
 }
 
-export const attack = (action, dmg) => {
+export const attack = (action: string, dmg: number) => {
   if (command.value.type === 'idle') {
     resetAttackTimer(false)
     command.value = { type: action, value: dmg }
   }
 }
 
-export const move = (repeats) => {
+export const move = (repeats: number) => {
   if (command.value.type === 'idle') {
     command.value = { type: 'move', value: repeats }
   }
@@ -60,19 +61,19 @@ export const hitAttack = () => {
 
 export const changeEnemy = () => {
   const scene = game.peek()?.scene
-  if(!scene) return
+  if (!scene) return
   const gameScene = scene.getScene('GameScene');
   // const children = gameScene.children.getChildren()
   // const e = children.find(c => c.name === 'enemy')
 
   const e = getEnemy()
 
-  if(!e) return
+  if (!e) return
 
   const indexOfCurrent = ENEMIES_LIST.findIndex((en) => {
     return en === e.texture.key
   })
-  const nextEnemy = ENEMIES_LIST.length -1 > indexOfCurrent ? indexOfCurrent + 1 : 0
+  const nextEnemy = ENEMIES_LIST.length - 1 > indexOfCurrent ? indexOfCurrent + 1 : 0
   const nextEnemyTextureKey = ENEMIES_LIST[nextEnemy]
 
   e.anims.remove('hit_enemy')
@@ -109,7 +110,7 @@ export const finishDamage = () => {
     current: newHealth > 0 ? newHealth : 0
   }
 
-  if(newHealth <= 0 ) {
+  if (newHealth <= 0) {
     setTimeout(() => {
       level.value = { current: level.value.current + 1, state: 'loading' }
       newProblem()
@@ -121,7 +122,8 @@ export const finishDamage = () => {
       enemyHealth.value = {
         total: newTotal,
         current: newTotal
-      } }, 2500)
+      }
+    }, 2500)
   } else {
     newProblem()
   }
@@ -135,7 +137,7 @@ export const newProblem = () => {
   problem.value = generateProblem(level.peek().current)
 }
 
-export const storeResult = (result) => {
+export const storeResult = (result: resultType) => {
   results.value = [...results.peek(), result]
 }
 
@@ -144,7 +146,7 @@ export const startAttackTimer = () => {
 }
 
 export const resetAttackTimer = (pause: boolean | undefined) => {
-  if(pause) {
+  if (pause) {
     attackTimer.value = { state: 'reset-pause', startTime: new Date().getTime() }
   } else {
     attackTimer.value = { state: 'reset', startTime: new Date().getTime() }
@@ -153,8 +155,8 @@ export const resetAttackTimer = (pause: boolean | undefined) => {
 
 export const increaseDuration = () => {
   const dur = attackDuration.peek().duration
-  const newDur =  dur * 1.1 > 20000 ? 20000 : parseInt((dur * 1.1).toFixed(0))
-  attackDuration.value = { duration: newDur}
+  const newDur = dur * 1.1 > 20000 ? 20000 : parseInt((dur * 1.1).toFixed(0))
+  attackDuration.value = { duration: newDur }
 }
 export const decreaseDuration = () => {
   const dur = attackDuration.peek().duration

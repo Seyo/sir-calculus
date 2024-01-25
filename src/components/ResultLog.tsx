@@ -2,17 +2,23 @@ import { results } from "../signals";
 import { useSignals } from "@preact/signals-react/runtime";
 import style from "./ResultLog.module.css";
 import { useEffect, useRef } from "react";
-
-const LogItem = ({ item }) => {
+import { resultType } from "../types";
+type LogItemProps = {
+  item: resultType
+}
+const LogItem = (props: LogItemProps) => {
+  const {item} = props
   const typeStyle = item.type === "correct" ? style.correct : style.wrong;
   let timeSpeed = style.time3;
 
-  if (item.timeRatio >= 0.66) {
-    timeSpeed = style.time3;
-  } else if (item.timeRatio >= 0.33) {
-    timeSpeed = style.time2;
-  } else if (item.timeRatio >= 0) {
-    timeSpeed = style.time1;
+  if(item.timeRatio) {
+    if (item.timeRatio >= 0.66) {
+      timeSpeed = style.time3;
+    } else if (item.timeRatio >= 0.33) {
+      timeSpeed = style.time2;
+    } else if (item.timeRatio >= 0) {
+      timeSpeed = style.time1;
+    }
   }
 
   return (

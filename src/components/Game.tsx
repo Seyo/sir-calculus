@@ -12,7 +12,7 @@ function generatePhaserCreate(
   enemyHealthEffect: effectUnsubscribeType | undefined,
   gameLevelEffect: effectUnsubscribeType | undefined,
 ) {
-  return function (scene: Phaser.Types.Scenes.SceneType) {
+  return function (scene: Phaser.Scene) {
     buildWorld(scene);
     createActors(scene);
 

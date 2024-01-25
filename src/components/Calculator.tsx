@@ -6,7 +6,7 @@ import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, re
 import { useEffect, useRef } from 'react'
 import { Timer } from './Timer'
 import { getRandomInt } from '../utils/utils'
-import { attackDurationType, attackTimerType, effectUnsubscribeType } from '../types'
+import { attackDurationType, attackTimerType, effectUnsubscribeType, problemType } from '../types'
 const DEBUG = false
 
 const reportResult = (type: string, formula: string, answer: number, level: number, attackTimerPeek: attackTimerType | undefined, attackDurationPeek: attackDurationType | undefined) => {
@@ -16,7 +16,7 @@ const reportResult = (type: string, formula: string, answer: number, level: numb
     const timeRatio = type === 'correct' ? time / attackDurationPeek.duration : 1
     storeResult({ type, formula, answer, level, time, timeRatio })
   } else {
-    storeResult({ type, formula, answer, level })
+    storeResult({ type, formula, answer, level, time: undefined, timeRatio:undefined })
   }
 }
 
@@ -43,7 +43,7 @@ export const Calculator = () => {
     }, 1000)
   }
 
-  const onClick = (num) => () => {
+  const onClick = (num: string) => () => {
     if (command.value.type !== 'idle') return
     if (loading.value) return
     output.value += num
@@ -92,24 +92,24 @@ export const Calculator = () => {
     output.value = ''
   }
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: KeyboardEvent) => {
     const number = parseInt(e.key)
     if (number >= 0 && number <= 9) {
       onClick(e.key)()
     }
   }
 
-  const debug = (prob) => {
+  const debug = (prob: problemType) => {
     clearTimeout(debugRef.current)
     const time = getRandomInt(500, 4900)
     console.log('Will answer in', time, 'ms')
     debugRef.current = setTimeout(() => {
       const toss = 1//getRandomInt(0, 2)
       if (toss) {
-        onClick(prob.answer)()
+        onClick(prob.answer + '')()
       } else {
         const ans = prob.answer + ''
-        ans.length === 1 ? onClick(9)() : onClick(99)()
+        ans.length === 1 ? onClick('9')() : onClick('99')()
       }
     }, time)
   }
