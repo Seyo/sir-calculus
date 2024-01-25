@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
 import { effect } from '@preact/signals-react'
-import { backgroundImage, command, enemyHealth, game, level, playerSprite } from '../signals'
-import { playIdle, playIdleEnemy, playMove, playMoveAndAttack1, playMoveAndAttack2, playMoveAndAttack3 } from './animationHandlers'
-import { setRandomBackground } from './worldHandler'
+import { backgroundImage, command, enemyHealth, foregroundImage, game, level } from '../signals'
+import { playIdle, playIdleEnemy, playMove, playMoveAndAttack1, playMoveAndAttack2, playMoveAndAttack3, setPlayerXPos } from './animationHandlers'
+import { setRandomBackground, setRandomforeground } from './worldHandler'
 import { PLAYER_START_X } from './gameConstants'
 import { changeEnemy } from '../signals/gameCommands'
 
@@ -25,28 +25,30 @@ export const setupCommandEffects = () => {
 export const setupEnemyHealthEffects = () => {
   return effect(() => {
     if (enemyHealth.value.current === 0) {
-      //playHitEnemy()
+      // TODO: build explosion animation for enemy
     }
   })
 }
 
 export const setupGameLevelEffects = () => {
   return effect(() => {
-    const p = playerSprite.peek()
     const bg = backgroundImage.peek()
+    const fg = foregroundImage.peek()
     const scene = game.peek()?.scene
     const gameScene = scene.getScene('GameScene');
-    if (level.value.state === 'loading') {
+    const {state} = level.value
+    if (state === 'loading') {
       playMove(-1)
       gameScene.cameras.main?.fadeOut(1000, 0, 0, 0)
       gameScene.cameras.main?.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         setRandomBackground(bg)
+        setRandomforeground(fg)
         changeEnemy()
         playIdleEnemy()
-        playIdle(p)
-        p.x = PLAYER_START_X
+        playIdle()
+        setPlayerXPos(PLAYER_START_X)
       })
-    } else if (level.value.state === 'loaded') {
+    } else if (state === 'loaded') {
       gameScene.cameras.main?.fadeIn(1000, 0, 0, 0)
     }
   })

@@ -18,7 +18,6 @@ export const attackDuration = signal({ duration: 10000 })
 export const game =  signal(null)
 export const sceneKey =  signal('MenuScene')
 export const gameScene = signal(null)
-export const menuScene = signal(null)
 
 export const backgroundImage = signal(null)
 export const foregroundImage = signal(null)
@@ -34,14 +33,6 @@ effect(() => {
     setTimeout(() => { gameEffect.value = '' }, 100)
   }
 })
-
-// effect(() => {
-//   if (sceneKey.value && game.peek()) {
-//     console.log(sceneKey.value)
-//     const scenes = game.peek()?.scene.keys[sceneKey.value]
-//     console.log(scenes)
-//   }
-// })
 
 //Timer effect
 let timeout = null
@@ -69,8 +60,8 @@ effect(() => {
     timeout = setTimeout(() => {
       attackTimer.value = { state: 'init-miss', startTime: new Date().getTime() }
     }, 250);
-    
-  }  
+
+  }
   else if (state === 'miss') {
 
     timeout = setTimeout(() => {

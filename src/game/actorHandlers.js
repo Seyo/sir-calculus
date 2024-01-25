@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { playerSprite } from "../signals"
-import { registerAnimationListeners } from "./animationHandlers"
+import { registerAnimationListeners } from "./playerAnimationListeners"
 import { ENEMIES_LIST, PLAYER_START_X, PLAYER_START_Y, SCALE } from "./gameConstants"
 
 const createEnemy = (scene) => {
@@ -29,6 +29,7 @@ const createPlayer = (scene) => {
   const p = scene.add.sprite(PLAYER_START_X, PLAYER_START_Y, 'player')
   p.anims.createFromAseprite('player')
   p.setScale(SCALE)
+  p.name = 'player'
 
   playerSprite.value = p
   return p
@@ -37,7 +38,7 @@ const createPlayer = (scene) => {
 export const createActors = (scene) => {
   const e = createEnemy(scene)
   const p = createPlayer(scene)
-  
+
   registerAnimationListeners(p)
 
   p.play({ key: 'idle', repeat: -1 })

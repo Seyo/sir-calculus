@@ -1,10 +1,24 @@
-import Phaser from 'phaser'
-import { finishDamage, hitAttack, idle } from '../signals/gameCommands'
-import { ATTACK_DISTANCE, JUMP_FRAME_COUNT, MOVE_FRAME_COUNT, PLAYER_START_X } from './gameConstants'
-import { playerSprite, game } from '../signals'
+import { game } from '../signals'
+
+const getEnemy = () => {
+  const scene = game.peek()?.scene
+  const gameScene = scene.getScene('GameScene')
+  const children = gameScene.children.getChildren()
+  const e = children.find((c) => c.name === 'enemy')
+  return e
+}
+
+const getPlayer = () => {
+  const scene = game.peek()?.scene
+  const gameScene = scene.getScene('GameScene')
+  const children = gameScene.children.getChildren()
+  const e = children.find((c) => c.name === 'player')
+  return e
+}
+
 
 export const playIdle = () => {
-  const p = playerSprite.peek()
+  const p = getPlayer()
   if (p?.anims.currentAnim.key !== 'idle') {
     p.play({ key: 'idle', repeat: -1 })
     p.chain()
@@ -12,41 +26,42 @@ export const playIdle = () => {
 }
 
 export const playReturn = () => {
-  const p = playerSprite.value
+  const p = getPlayer()
   return p.chain([{ key: 'jumpback', repeat: 0 }])
 }
 
 export const playMove = (repeat = 0) => {
-  const p = playerSprite.value
+  const p = getPlayer()
   p.play({ key: 'move', repeat: repeat })
   p.chain({ key: 'idle', repeat: -1 })
 }
 
 export const playMoveAndAttack1 = () => {
-  const p = playerSprite.peek()
+  const p = getPlayer()
   p.play({ key: 'move', repeat: 1 })
   p.chain('attack1')
   playReturn(true)
 }
 export const playMoveAndAttack2 = () => {
-  const p = playerSprite.value
+  const p = getPlayer()
   p.play({ key: 'move', repeat: 1 })
   p.chain(['attack1','attack2'])
   playReturn(true)
 }
 export const playMoveAndAttack3 = () => {
-  const p = playerSprite.value
+  const p = getPlayer()
   p.play({ key: 'move', repeat: 1 })
   p.chain(['attack1', 'attack2', 'attack3'])
   playReturn(true)
 }
 
-const getEnemy = () => {
-  const scene = game.peek()?.scene
-  const gameScene = scene.getScene('GameScene');
-  const children = gameScene.children.getChildren()
-  const e = children.find(c => c.name === 'enemy')
-  return e
+export const setPlayerXPos = (xPos) => {
+  const p = getPlayer()
+  p.x = xPos
+}
+export const changePlayerXPos = (xPosDelta) => {
+  const p = getPlayer()
+  p.x += xPosDelta
 }
 
 export const playHitEnemy = () => {
@@ -59,61 +74,4 @@ export const playIdleEnemy = () => {
   e.play({ key: 'idle_enemy', repeat: -1 })
 }
 
-export const registerAnimationListeners = () => {
-  const p = playerSprite.value
-  p.on(Phaser.Animations.Events.ANIMATION_COMPLETE, function (anim) {
-    if (anim.key === 'jumpback') {
-      const jumpBackFrameDistance = ATTACK_DISTANCE / JUMP_FRAME_COUNT
-      p.jumpBackFrameDistance = jumpBackFrameDistance
-      idle()
-    }
-    if (anim.key === 'move') {
-      const frameDistance = ATTACK_DISTANCE / MOVE_FRAME_COUNT
-      p.x += frameDistance
-    }
-  })
-  p.on(Phaser.Animations.Events.ANIMATION_START, function (anim) {
-    if (anim.key === 'jumpback') {
-      finishDamage()
-      //calculate distance to jump
-      const distanceFromStart = p.x - PLAYER_START_X
-      const jumpBackFrameDistance = distanceFromStart / JUMP_FRAME_COUNT
-      p.jumpBackFrameDistance = jumpBackFrameDistance
-    }
-    if (anim.key === 'idle') {
-      idle()
-    }
 
-  })
-
-  p.on(Phaser.Animations.Events.ANIMATION_UPDATE, function (anim) {
-    if (anim.key === 'move') {
-      const frameDistance = ATTACK_DISTANCE / MOVE_FRAME_COUNT
-      p.x += frameDistance
-    }
-    if (anim.key === 'jumpback') {
-      const frame = p.anims.currentFrame.index
-      if (frame >= 5 && frame < 8) {
-        p.x -= p.jumpBackFrameDistance
-      }
-    }
-    if (anim.key === 'attack1') {
-      const frame = p.anims.currentFrame.index
-      if (frame === 5) {
-        hitAttack()
-      }
-    }
-    if (anim.key === 'attack2') {
-      const frame = p.anims.currentFrame.index
-      if (frame === 6) {
-        hitAttack()
-      }
-    }
-    if (anim.key === 'attack3') {
-      const frame = p.anims.currentFrame.index
-      if (frame === 8) {
-        hitAttack()
-      }
-    }
-  })
-}

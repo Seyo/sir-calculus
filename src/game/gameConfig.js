@@ -1,11 +1,12 @@
 import Phaser from 'phaser'
-import { backgroundImages, buildWorld, foregroundImages, getBgName, getFgName } from './worldHandler'
+import { buildWorld, getBgName, getFgName } from './worldHandler'
 import { ENEMIES_LIST, PLAYER_START_X, SCALE } from './gameConstants';
-import { gameScene, menuScene } from '../signals';
+import { gameScene } from '../signals';
+import { backgroundImages, foregroundImages } from '../assets/images';
 
 function preload(scene) {
   scene.load.aseprite('player', '/sir2.png', '/sir2.json')
-  scene.load.aseprite('calculator', '/calculator.png', '/calculator.json')
+
   ENEMIES_LIST.forEach(m => {
     scene.load.spritesheet(m, `/${m}.png`, { frameWidth: 64, frameHeight: 64 });
   })
@@ -48,19 +49,12 @@ export const gameConfig = (create) => {
     }
   }
   gameScene.value = GameScene
-  menuScene.value = MenuScene
   return {
     type: Phaser.AUTO,
     width: 1024,
     height: 800,
     parent: 'phaser-game',
     pixelArt: true,
-    physics: {
-      default: 'arcade',
-      arcade: {
-        gravity: { y: 200 },
-      },
-    },
     scene: [MenuScene],
   }
 }
