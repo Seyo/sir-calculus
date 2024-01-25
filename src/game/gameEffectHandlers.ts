@@ -34,7 +34,11 @@ export const setupGameLevelEffects = () => {
   return effect(() => {
     const bg = backgroundImage.peek()
     const fg = foregroundImage.peek()
-    const scene = game.peek()?.scene
+    const g = game.peek()
+    const missingData = !(g && bg && fg)
+    if (missingData) return;
+
+    const scene = g.scene
     const gameScene = scene.getScene('GameScene');
     const {state} = level.value
     if (state === 'loading') {

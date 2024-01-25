@@ -1,10 +1,16 @@
 import { attackDuration, attackTimer, command, damage, enemyHealth, game, gameEffect, gameScene, level, problem, results, sceneKey } from "."
+
 import { ENEMIES_LIST } from "../game/gameConstants"
+import { getEnemy } from "../game/gameEntities"
 import { generateProblem } from "../utils/utils"
 
 export const toggleMenu = () => {
 
+  const g = game.peek()
+  const gameScenePeek = gameScene.peek()
+  if (!(g && gameScenePeek)) return;
   const scene = game.peek()?.scene
+  if(!scene) return
 
   const isPaused = scene.isPaused('MenuScene');
   if (false === isPaused) {
@@ -16,7 +22,7 @@ export const toggleMenu = () => {
 
   const isNull = scene.getScene('GameScene');
   if (null === isNull) {
-    scene.add('GameScene', gameScene.peek(), true);
+    scene.add("GameScene", gameScenePeek, true);
     sceneKey.value = 'GameScene'
   } else {
     scene.remove('GameScene');
@@ -27,13 +33,13 @@ export const toggleMenu = () => {
 
 export const idle = () => {
   if(command.peek().type !== 'idle') {
-    command.value = { type: 'idle' }
+    command.value = { type: 'idle', value: 0 }
   }
 }
 
 export const attack = (action, dmg) => {
   if (command.value.type === 'idle') {
-    resetAttackTimer()
+    resetAttackTimer(false)
     command.value = { type: action, value: dmg }
   }
 }
@@ -45,7 +51,7 @@ export const move = (repeats) => {
 }
 
 export const reset = () => {
-  command.value = { type: 'reset' }
+  command.value = { type: 'reset', value: 0 }
 }
 
 export const hitAttack = () => {
@@ -54,9 +60,15 @@ export const hitAttack = () => {
 
 export const changeEnemy = () => {
   const scene = game.peek()?.scene
+  if(!scene) return
   const gameScene = scene.getScene('GameScene');
-  const children = gameScene.children.getChildren()
-  const e = children.find(c => c.name === 'enemy')
+  // const children = gameScene.children.getChildren()
+  // const e = children.find(c => c.name === 'enemy')
+
+  const e = getEnemy()
+
+  if(!e) return
+
   const indexOfCurrent = ENEMIES_LIST.findIndex((en) => {
     return en === e.texture.key
   })
@@ -105,7 +117,7 @@ export const finishDamage = () => {
 
     setTimeout(() => {
       level.value = { current: level.value.current, state: 'loaded' }
-      const newTotal = (enemyHealth.value.total * 1.05).toFixed(0)
+      const newTotal = parseInt((enemyHealth.value.total * 1.05).toFixed(0))
       enemyHealth.value = {
         total: newTotal,
         current: newTotal
@@ -131,7 +143,7 @@ export const startAttackTimer = () => {
   attackTimer.value = { state: 'running', startTime: new Date().getTime() }
 }
 
-export const resetAttackTimer = (pause) => {
+export const resetAttackTimer = (pause: boolean | undefined) => {
   if(pause) {
     attackTimer.value = { state: 'reset-pause', startTime: new Date().getTime() }
   } else {
@@ -141,11 +153,11 @@ export const resetAttackTimer = (pause) => {
 
 export const increaseDuration = () => {
   const dur = attackDuration.peek().duration
-  const newDur = dur * 1.1 > 20000 ? 20000 : (dur * 1.1).toFixed(0)
+  const newDur =  dur * 1.1 > 20000 ? 20000 : parseInt((dur * 1.1).toFixed(0))
   attackDuration.value = { duration: newDur}
 }
 export const decreaseDuration = () => {
   const dur = attackDuration.peek().duration
-  const newDur = (dur - (0.1 * dur)) < 5000 ? 5000 : (dur - (0.1 * dur)).toFixed(0)
+  const newDur = (dur - (0.1 * dur)) < 5000 ? 5000 : parseInt((dur - (0.1 * dur)).toFixed(0))
   attackDuration.value = { duration: newDur }
 }

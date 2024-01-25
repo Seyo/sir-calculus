@@ -3,24 +3,26 @@ import { damage, enemyHealth, level } from '../signals'
 import style from './DamageDisplay.module.css'
 import { useSignals } from '@preact/signals-react/runtime'
 
-var percentColors = [
+const percentColors = [
   { pct: 0.0, color: { r: 0x99, g: 0x11, b: 0x11 } }, //1ba11b
   { pct: 0.5, color: { r: 0xd3, g: 0x81, b: 0x17 } }, //d38117
   { pct: 1.0, color: { r: 0x1b, g: 0xa1, b: 0x1b } }]; //991111
 
-var getColorForPercentage = function (pct) {
-  for (var i = 1; i < percentColors.length - 1; i++) {
+const getColorForPercentage = function (pct: number) {
+  let idx: number = 1
+  for (let i = 1; i < percentColors.length - 1; i++) {
+    idx = i +1
     if (pct < percentColors[i].pct) {
       break;
     }
   }
-  var lower = percentColors[i - 1];
-  var upper = percentColors[i];
-  var range = upper.pct - lower.pct;
-  var rangePct = (pct - lower.pct) / range;
-  var pctLower = 1 - rangePct;
-  var pctUpper = rangePct;
-  var color = {
+  const lower = percentColors[idx - 1];
+  const upper = percentColors[idx];
+  const range = upper.pct - lower.pct;
+  const rangePct = (pct - lower.pct) / range;
+  const pctLower = 1 - rangePct;
+  const pctUpper = rangePct;
+  const color = {
     r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
     g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
     b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
@@ -39,7 +41,6 @@ export const DamageDisplay = () => {
   const sum = hits.reduce((acc, curr) => {
     return acc + curr;
   }, 0);
-  //const formula = hits.join(' + ') + ' = ' + sum
 
   return <>
     <div className={style.damageDisplay} >

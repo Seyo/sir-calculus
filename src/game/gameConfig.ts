@@ -4,57 +4,58 @@ import { ENEMIES_LIST, PLAYER_START_X, SCALE } from './gameConstants';
 import { gameScene } from '../signals';
 import { backgroundImages, foregroundImages } from '../assets/images';
 
-function preload(scene) {
+function preload(scene: Phaser.Scene) {
   scene.load.aseprite('player', '/sir2.png', '/sir2.json')
 
   ENEMIES_LIST.forEach(m => {
     scene.load.spritesheet(m, `/${m}.png`, { frameWidth: 64, frameHeight: 64 });
   })
-  backgroundImages.forEach((bg) => {
+  backgroundImages.forEach((bg: string) => {
     const bgName = getBgName(bg)
     scene.load.image(bgName, bg)
   })
-  foregroundImages.forEach((fg) => {
+  foregroundImages.forEach((fg: string) => {
     const fgName = getFgName(fg)
     scene.load.image(fgName, fg)
   })
   scene.load.image('ground', '/ground1.png')
 }
 
-export const gameConfig = (create) => {
+export const gameConfig = (create: (s: Phaser.Scene) => void): Phaser.Types.Core.GameConfig => {
   class GameScene extends Phaser.Scene {
     constructor() {
-      super('GameScene');
+      super("GameScene");
     }
     preload() {
-      preload(this)
+      preload(this);
     }
     create() {
-      create(this)
+      create(this);
     }
   }
   class MenuScene extends Phaser.Scene {
     constructor() {
-      super('MenuScene');
+      super("MenuScene");
     }
     preload() {
-      preload(this)
+      preload(this);
     }
     create() {
-      buildWorld(this)
-      const p = this.add.sprite(PLAYER_START_X, 328, 'player')
-      p.anims.createFromAseprite('player')
-      p.setScale(SCALE)
-      p.play({ key: 'idle', repeat: -1 })
+      buildWorld(this);
+      const thisScene = this as Phaser.Scene
+      const p = thisScene.add.sprite(PLAYER_START_X, 328, 'player')
+      p.anims.createFromAseprite("player");
+      p.setScale(SCALE);
+      p.play({ key: "idle", repeat: -1 });
     }
   }
-  gameScene.value = GameScene
+  gameScene.value = GameScene;
   return {
     type: Phaser.AUTO,
     width: 1024,
     height: 800,
-    parent: 'phaser-game',
+    parent: "phaser-game",
     pixelArt: true,
     scene: [MenuScene],
-  }
-}
+  };
+};

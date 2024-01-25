@@ -1,20 +1,19 @@
 {
-  "name": "sir-calculus",
+  "name": "sir-calculus-ts",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
     "clean": "call scripts/clean-gh-dir.bat",
     "copy": "call scripts/copy-gh-page.bat",
     "commit-gh-page": "call scripts/commit-and-run.bat",
-    "deploy": "npm run build && npm run clean && npm run copy && npm run commit-gh-page",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "deploy": "npm run build && npm run clean && npm run copy && npm run commit-gh-page"
   },
   "dependencies": {
-    "@preact/signals": "^1.2.2",
     "@preact/signals-react": "^2.0.0",
     "bitecs": "^0.3.40",
     "jimp": "^0.22.10",
@@ -26,11 +25,13 @@
   "devDependencies": {
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.55.0",
-    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.2.2",
     "vite": "^5.0.8"
   }
 }

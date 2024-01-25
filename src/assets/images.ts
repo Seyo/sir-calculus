@@ -1,4 +1,4 @@
-export const backgroundImages = [
+export const backgroundImages: string[] = [
   '/backgrounds/bg_true_00001_.png',
   '/backgrounds/bg_true_00002_.png',
   '/backgrounds/bg_true_00003_.png',
@@ -41,7 +41,7 @@ export const backgroundImages = [
   '/backgrounds/bg_true_00040_.png',
 ]
 
-export const foregroundImages = [
+export const foregroundImages: string[] = [
   '/foregrounds/fg_true_00001_.png',
   '/foregrounds/fg_true_00002_.png',
   '/foregrounds/fg_true_00003_.png',

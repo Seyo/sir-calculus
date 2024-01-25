@@ -19,7 +19,7 @@ const generateWhiteOut = (image, alpha) => {
 }
 
 const handleImage = async (imgSrc, shadowOrig, idx) => {
-  let image = await new Jimp(64 * 5, 64, 'transparent', (err, image) => {
+  let image = await new Jimp(64 * 5, 64, 'transparent', (err) => {
     if (err) throw err;
   });
   Jimp.read(folderPath + imgSrc)
