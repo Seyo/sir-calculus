@@ -30,17 +30,26 @@ export const setupEnemyHealthEffects = () => {
   })
 }
 
+type gameResourcesType = { bg: Phaser.GameObjects.Image; fg: Phaser.GameObjects.Image; gameScene: Phaser.Scene }
+const getGameResources = (): gameResourcesType | undefined => {
+  const bg = backgroundImage.peek()
+  const fg = foregroundImage.peek()
+  const g = game.peek()
+  const missingData = !(g && bg && fg)
+  if (missingData) return
+
+  const scene = g.scene
+  const gameScene = scene.getScene('GameScene')
+  return { bg, fg, gameScene }
+}
+
 export const setupGameLevelEffects = () => {
   return effect(() => {
-    const bg = backgroundImage.peek()
-    const fg = foregroundImage.peek()
-    const g = game.peek()
-    const missingData = !(g && bg && fg)
-    if (missingData) return;
-
-    const scene = g.scene
-    const gameScene = scene.getScene('GameScene');
-    const {state} = level.value
+    const gameResources: gameResourcesType | undefined = getGameResources()
+    if (!gameResources) return
+    const { bg, fg, gameScene } = gameResources
+    const { state } = level.value
+    
     if (state === 'loading') {
       playMove(-1)
       gameScene.cameras.main?.fadeOut(1000, 0, 0, 0)

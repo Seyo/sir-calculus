@@ -4,8 +4,8 @@ export type resultType = {
   formula: string
   answer: number
   level: number
-  time: number | undefined
-  timeRatio: number | undefined
+  time?: number | undefined
+  timeRatio?: number | undefined
 }
 export type damageType = { state: string; hits: number[] }
 export type commandType = { type: string; value: number }
