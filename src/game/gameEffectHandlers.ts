@@ -40,6 +40,7 @@ const getGameResources = (): gameResourcesType | undefined => {
 
   const scene = g.scene
   const gameScene = scene.getScene('GameScene')
+  if(!gameScene) return
   return { bg, fg, gameScene }
 }
 
@@ -49,7 +50,7 @@ export const setupGameLevelEffects = () => {
     if (!gameResources) return
     const { bg, fg, gameScene } = gameResources
     const { state } = level.value
-    
+
     if (state === 'loading') {
       playMove(-1)
       gameScene.cameras.main?.fadeOut(1000, 0, 0, 0)

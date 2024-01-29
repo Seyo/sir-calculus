@@ -1,35 +1,9 @@
-import { attackDuration, attackTimer, command, damage, enemyHealth, game, gameEffect, gameScene, level, problem, results, sceneKey } from "."
+import { attackDuration, attackTimer, command, damage, enemyHealth, game, gameEffect, level, problem, results } from "."
 
 import { ENEMIES_LIST } from "../game/gameConstants"
 import { getEnemy } from "../game/gameEntities"
 import { resultType } from "../types"
 import { generateProblem } from "../utils/utils"
-
-export const toggleMenu = () => {
-
-  const g = game.peek()
-  const gameScenePeek = gameScene.peek()
-  if (!(g && gameScenePeek)) return;
-  const scene = game.peek()?.scene
-  if (!scene) return
-
-  const isPaused = scene.isPaused('MenuScene');
-  if (false === isPaused) {
-    scene.pause('MenuScene');
-  } else {
-    scene.resume('MenuScene');
-    sceneKey.value = 'MenuScene'
-  }
-
-  const isNull = scene.getScene('GameScene');
-  if (null === isNull) {
-    scene.add("GameScene", gameScenePeek, true);
-    sceneKey.value = 'GameScene'
-  } else {
-    scene.remove('GameScene');
-  }
-
-}
 
 
 export const idle = () => {
