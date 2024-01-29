@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
-import { registerAnimationListeners } from "./playerAnimationListeners"
-import { ENEMIES_LIST, PLAYER_START_X, PLAYER_START_Y, SCALE } from "./gameConstants"
-import { customSpriteType } from '../types'
+import { registerAnimationListeners } from "../listeners/playerAnimationListeners"
+import { ENEMIES_LIST, PLAYER_START_X, PLAYER_START_Y, SCALE } from "../gameConstants"
+import { customSpriteType } from '../../types'
 
 const createEnemy = (scene: Phaser.Scene): customSpriteType => {
 

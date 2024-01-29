@@ -1,7 +1,7 @@
 import { useSignals } from '@preact/signals-react/runtime'
 import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../signals'
 import { effect, useSignal } from '@preact/signals-react'
-import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../signals/gameCommands'
+import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../controllers/gameCommands'
 import { useEffect, useRef } from 'react'
 import { getRandomInt } from '../utils/utils'
 import { attackDurationType, attackTimerType, commandType, effectUnsubscribeType, levelType, problemType, resultType } from '../types'
@@ -16,6 +16,52 @@ const reportResult = (reportObj: resultType, attackTimerPeek?: attackTimerType, 
   } else {
     storeResult({ type: reportObj.type, formula: reportObj.formula, answer: reportObj.answer, level: reportObj.level })
   }
+}
+
+const isAnswerComplete = (input: string, problemValue: problemType): boolean => {
+  const answerString = '' + problemValue.answer
+  return input.length === answerString.length
+}
+
+const determineAttackType = (startTime: number, duration: number) : string => {
+   const responseTime = new Date().getTime() - startTime
+   const timePercentage = responseTime / duration
+   if (timePercentage >= 0.66) {
+     return 'attack1'
+   } else if (timePercentage >= 0.33) {
+     return 'attack2'
+   } else if (timePercentage >= 0) {
+     return 'attack3'
+   }
+  return 'attack1'
+}
+
+const shouldMakeHarder = (attackType: string) : boolean => ['attack2', 'attack3'].includes(attackType)
+
+const handleCorrectAnswer = (attackDurationPeek: attackDurationType, attackTimerPeek: attackTimerType, reportObj: resultType, problemPeek: problemType) => {
+  const { startTime, state } = attackTimerPeek
+  const { duration } = attackDurationPeek
+  reportObj.type = 'correct'
+  clearDamage()
+  if (state === 'running') {
+    reportResult(reportObj, attackTimerPeek, attackDurationPeek)
+    const attackType: string = determineAttackType(startTime, duration)
+    attack(attackType, problemPeek.answer)
+    shouldMakeHarder(attackType) && decreaseDuration()
+  } else {
+    reportResult(reportObj)
+    attack('attack1', problemPeek.answer)
+  }
+}
+const handleWrongAnswer = (attackDurationPeek: attackDurationType, attackTimerPeek: attackTimerType, reportObj: resultType, failCallback: () => void) => {
+  const { state } = attackTimerPeek
+  reportObj.type = 'wrong'
+  if (state === 'running') {
+    reportResult(reportObj, attackTimerPeek, attackDurationPeek)
+  } else {
+    reportResult(reportObj)
+  }
+  failCallback()
 }
 
 export const useCalcualtor = () => {
@@ -41,14 +87,10 @@ export const useCalcualtor = () => {
     }, 1000)
   }
 
-  const isAnswerComplete = (input: string, problemValue: problemType): boolean => {
-    const answerString = '' + problemValue.answer
-    return input.length === answerString.length
-  }
-
   const onClick = (num: string) => () => {
     if (command.value.type !== 'idle') return
     if (loading.value) return
+
     output.value += num
     if (!isAnswerComplete(output.value, problem.value)) return
 
@@ -57,35 +99,11 @@ export const useCalcualtor = () => {
     const problemPeek = problem.peek()
     const levelPeek = level.peek()
 
-    const { startTime, state } = attackTimerPeek
+    const reportObj: resultType = { type: 'pending', formula: problemPeek.text, answer: parseInt(output.value), level: levelPeek.current }
     if (problem.value.answer === parseInt(output.value)) {
-      const { duration } = attackDurationPeek
-      clearDamage()
-      if (state === 'running') {
-        const responseTime = new Date().getTime() - startTime
-        const timePercentage = responseTime / duration
-
-        reportResult({ type: 'correct', formula: problemPeek.text, answer: problem.value.answer, level: levelPeek.current }, attackTimerPeek, attackDurationPeek)
-        if (timePercentage >= 0.66) {
-          attack('attack1', problem.value.answer)
-        } else if (timePercentage >= 0.33) {
-          attack('attack2', problem.value.answer)
-          decreaseDuration()
-        } else if (timePercentage >= 0) {
-          attack('attack3', problem.value.answer)
-          decreaseDuration()
-        }
-      } else {
-        reportResult({ type: 'correct', formula: problemPeek.text, answer: problem.value.answer, level: levelPeek.current })
-        attack('attack1', problem.value.answer)
-      }
+      handleCorrectAnswer(attackDurationPeek, attackTimerPeek, reportObj, problemPeek)
     } else {
-      if (state === 'running') {
-        reportResult({ type: 'wrong', formula: problemPeek.text, answer: parseInt(output.value), level: levelPeek.current }, attackTimerPeek, attackDurationPeek)
-      } else {
-        reportResult({ type: 'wrong', formula: problemPeek.text, answer: parseInt(output.value), level: levelPeek.current })
-      }
-      fail()
+      handleWrongAnswer(attackDurationPeek, attackTimerPeek, reportObj, fail)
     }
   }
 

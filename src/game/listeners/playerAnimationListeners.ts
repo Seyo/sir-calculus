@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
-import { finishDamage, hitAttack, idle } from '../signals/gameCommands.js'
-import { ATTACK_DISTANCE, JUMP_FRAME_COUNT, MOVE_FRAME_COUNT, PLAYER_START_X } from './gameConstants.js'
-import { changePlayerXPos } from './animationHandlers'
-import { customSpriteType } from '../types/index.js'
+import { finishDamage, hitAttack, idle } from '../../controllers/gameCommands.js'
+import { ATTACK_DISTANCE, JUMP_FRAME_COUNT, MOVE_FRAME_COUNT, PLAYER_START_X } from '../gameConstants.js'
+import { changePlayerXPos } from '../animationHandlers.js'
+import { customSpriteType } from '../../types/index.js'
 
 const handleUpdateMove = () => {
   const frameDistance = ATTACK_DISTANCE / MOVE_FRAME_COUNT
@@ -21,7 +21,7 @@ const handleUpdateAttack = (p: Phaser.GameObjects.Sprite) => {
     'attack1': 5,
     'attack2': 6,
     'attack3': 8
-  } 
+  }
   const frame: number = p.anims.currentFrame?.index || -1
   const animationKey: string = p.anims.currentAnim?.key || 'not-set'
   const lookUpValue: number = hitFrameLookup[animationKey]

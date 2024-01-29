@@ -1,7 +1,5 @@
 import { getEnemy, getPlayer } from "./gameEntities"
 
-
-
 export const playIdle = () => {
   const p = getPlayer()
   if(!p) return

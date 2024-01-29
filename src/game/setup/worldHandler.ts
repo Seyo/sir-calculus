@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
-import { backgroundImages, foregroundImages } from '../assets/images'
-import { backgroundImage, foregroundImage } from '../signals'
-import { getRandomInt } from '../utils/utils'
+import { backgroundImages, foregroundImages } from '../../assets/images'
+import { backgroundImage, foregroundImage } from '../../signals'
+import { getRandomInt } from '../../utils/utils'
 
 export const getBgName = (filepath: string) => filepath.replace('/backgrounds/', '').replace('_.png', '')
 export const getFgName = (filepath: string) => filepath.replace('/foregrounds/', '').replace('_.png', '')

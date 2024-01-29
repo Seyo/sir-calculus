@@ -1,84 +1,55 @@
 import Phaser from 'phaser'
-import { effect, signal } from '@preact/signals-react'
+import { signal } from '@preact/signals-react'
 import { generateProblem } from '../utils/utils'
-import { playHitEnemy } from '../game/animationHandlers'
 import { attackDurationType, attackTimerType, commandType, damageType, enemyHealthType, levelType, problemType, resultType } from '../types'
+import { setupAttackTimerEffect, setupCommandEffects, setupEnemyHealthEffects, setupGameLevelEffects, setupHitEnemyEffect } from '../game/listeners/gameEffectHandlers'
 
+// Commands sent from UI to game engine
 export const command = signal<commandType>({
   type: 'idle',
   value: 0,
 })
+// Events happening in game engine that effects can listen to, example enemy hit animation
 export const gameEffect = signal<string>('')
+
+// Damage dealt to enemy for rendering in UI
 export const damage = signal<damageType>({
   state: 'idle',
   hits: [],
 })
 
+// State of enemy health
 export const enemyHealth = signal<enemyHealthType>({ total: 100, current: 100 })
+// Game level state
 export const level = signal<levelType>({ current: 1, state: 'loaded' })
 
+// Problem to solve
 export const problem = signal<problemType>(generateProblem(1))
 
+// List of results from gameplay
 export const results = signal<resultType[]>([])
 
+// Tracking state of attack timer
 export const attackTimer = signal<attackTimerType>({
   state: 'init',
   startTime: new Date().getTime(),
 })
+// Duration of attackTimer
 export const attackDuration = signal<attackDurationType>({ duration: 10000 })
 
+// Phaser game object for easy read
 export const game = signal<Phaser.Game | null>(null)
+// Key for current scene
 export const sceneKey = signal<string>('MenuScene')
+// Game scene object
 export const gameScene = signal<Phaser.Types.Scenes.SceneType | null>(null)
 
+// Reference to Phaser game images
 export const backgroundImage = signal<Phaser.GameObjects.Image | undefined>(undefined)
 export const foregroundImage = signal<Phaser.GameObjects.Image | undefined>(undefined)
 
-// hit effect
-effect(() => {
-  if (gameEffect.value === 'hit') {
-    playHitEnemy()
-    const currentHits: damageType = damage.peek()
-    const currentCommand: commandType = command.peek()
-    damage.value = {
-      state: 'inProgress',
-      hits: [...currentHits.hits, currentCommand.value],
-    }
-    setTimeout(() => {
-      gameEffect.value = ''
-    }, 100)
-  }
-})
-
-//Timer effect
-let timeout: NodeJS.Timeout
-effect(() => {
-  const { duration } = attackDuration.peek()
-  const { state } = attackTimer.value
-
-  if (state === 'running') {
-    timeout = setTimeout(() => {
-      attackTimer.value = { state: 'miss', startTime: new Date().getTime() }
-    }, duration)
-  } else if (state === 'reset') {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      attackTimer.value = { state: 'init', startTime: new Date().getTime() }
-    }, 250)
-  } else if (state === 'reset-pause') {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      attackTimer.value = {
-        state: 'init-miss',
-        startTime: new Date().getTime(),
-      }
-    }, 250)
-  } else if (state === 'miss') {
-    timeout = setTimeout(() => {
-      attackTimer.value = {
-        state: 'init-miss',
-        startTime: new Date().getTime(),
-      }
-    }, 250)
-  }
-})
+setupCommandEffects()
+setupEnemyHealthEffects()
+setupGameLevelEffects()
+setupHitEnemyEffect()
+setupAttackTimerEffect()
