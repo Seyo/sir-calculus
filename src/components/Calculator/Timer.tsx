@@ -1,4 +1,4 @@
-import { attackDuration, attackTimer } from '../signals'
+import { attackDuration, attackTimer } from '../../signals'
 import style from  './Timer.module.css'
 export const Timer = () => {
   return <>

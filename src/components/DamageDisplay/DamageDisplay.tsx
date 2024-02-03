@@ -1,5 +1,5 @@
 
-import { damage, enemyHealth, level } from '../signals'
+import { damage, enemyHealth, level } from '../../signals'
 import style from './DamageDisplay.module.css'
 import { useSignals } from '@preact/signals-react/runtime'
 

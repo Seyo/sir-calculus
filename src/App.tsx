@@ -1,10 +1,10 @@
 import "./App.css";
-import { Calculator } from "./components/Calculator";
-import { DamageDisplay } from "./components/DamageDisplay";
-import { Game } from "./components/Game";
+import { Calculator } from "./components/Calculator/Calculator";
+import { DamageDisplay } from "./components/DamageDisplay/DamageDisplay";
+import { Game } from "./components/Game/Game";
 // import { GameController } from './components/GameController'
-import { MainMenu } from "./components/MainMenu";
-import { ResultLog } from "./components/ResultLog";
+import { MainMenu } from "./components/Menu/MainMenu";
+import { ResultLog } from "./components/ResultLog/ResultLog";
 import { useSignals } from "@preact/signals-react/runtime";
 import { sceneKey } from "./signals";
 function App() {

@@ -1,8 +1,8 @@
-import { results } from "../signals";
+import { results } from "../../signals";
 import { useSignals } from "@preact/signals-react/runtime";
 import style from "./ResultLog.module.css";
 import { useEffect, useRef } from "react";
-import { resultType } from "../types";
+import { resultType } from "../../types";
 type LogItemProps = {
   item: resultType
 }

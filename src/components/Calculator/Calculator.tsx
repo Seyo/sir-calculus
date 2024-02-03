@@ -1,6 +1,6 @@
 import style from './Calculator.module.css'
 import { Timer } from './Timer'
-import { useCalcualtor } from '../hooks/useCalculator'
+import { useCalcualtor } from './useCalculator'
 
 export const Calculator = () => {
   const { onClick, clear, displayProblem, displayCorrect, displayError, problemValue, outputValue } = useCalcualtor()

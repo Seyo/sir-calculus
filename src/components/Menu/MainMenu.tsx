@@ -1,4 +1,4 @@
-import { toggleMenu } from '../controllers/uiCommands'
+import { toggleMenu } from '../../controllers/uiCommands'
 import style from './MainMenu.module.css'
 
 export const MainMenu = () => {

@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { useEffect } from 'react'
-import { gameConfig } from '../game/setup/gameConfig'
-import { game } from '../signals'
+import { gameConfig } from '../../game/setup/gameConfig'
+import { game } from '../../signals'
 
 export const Game = () => {
   useEffect(() => {

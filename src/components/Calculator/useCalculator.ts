@@ -1,10 +1,10 @@
 import { useSignals } from '@preact/signals-react/runtime'
-import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../signals'
+import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../../signals'
 import { effect, useSignal } from '@preact/signals-react'
-import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../controllers/gameCommands'
+import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../../controllers/gameCommands'
 import { useEffect, useRef } from 'react'
-import { getRandomInt } from '../utils/utils'
-import { attackDurationType, attackTimerType, commandType, effectUnsubscribeType, levelType, problemType, resultType } from '../types'
+import { getRandomInt } from '../../utils/utils'
+import { attackDurationType, attackTimerType, commandType, effectUnsubscribeType, levelType, problemType, resultType } from '../../types'
 const DEBUG = false
 
 const reportResult = (reportObj: resultType, attackTimerPeek?: attackTimerType, attackDurationPeek?: attackDurationType) => {
