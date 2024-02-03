@@ -1,9 +1,9 @@
 
-import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from '../signals'
+import { attackDuration, attackTimer, command, damage, enemyHealth, gameEffect, level, problem } from '../../signals'
 import style from './GameController.module.css'
 import { useSignals } from '@preact/signals-react/runtime'
-import { attack, changeEnemy, clearDamage, move } from '../controllers/gameCommands'
-import { MOVE_IN_ANIM_REPEATS } from '../game/gameConstants'
+import { attack, changeEnemy, clearDamage, move } from '../../controllers/gameCommands'
+import { MOVE_IN_ANIM_REPEATS } from '../../game/gameConstants'
 export const GameController = () => {
   useSignals();
   const onClick = (action: string) => () => {
