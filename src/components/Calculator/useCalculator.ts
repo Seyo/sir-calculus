@@ -1,67 +1,16 @@
 import { useSignals } from '@preact/signals-react/runtime'
 import { attackDuration, attackTimer, command, enemyHealth, level, problem } from '../../signals'
 import { effect, useSignal } from '@preact/signals-react'
-import { attack, clearDamage, decreaseDuration, increaseDuration, newProblem, resetAttackTimer, startAttackTimer, storeResult } from '../../controllers/gameCommands'
+import { increaseDuration, newProblem, resetAttackTimer, startAttackTimer } from '../../controllers/gameCommands'
 import { useEffect, useRef } from 'react'
 import { getRandomInt } from '../../utils/utils'
-import { attackDurationType, attackTimerType, commandType, effectUnsubscribeType, levelType, problemType, resultType } from '../../types'
+import { commandType, effectUnsubscribeType, levelType, problemType, resultType } from '../../types'
+import { handleCorrectAnswer, handleTimeout, handleWrongAnswer } from '../../controllers/problemCommands'
 const DEBUG = false
-
-const reportResult = (reportObj: resultType, attackTimerPeek?: attackTimerType, attackDurationPeek?: attackDurationType) => {
-  const recordTime = new Date()
-  if (attackTimerPeek && attackDurationPeek) {
-    const time = recordTime.getTime() - attackTimerPeek.startTime
-    const timeRatio = reportObj.type === 'correct' ? time / attackDurationPeek.duration : 1
-    storeResult({ type: reportObj.type, formula: reportObj.formula, answer: reportObj.answer, level: reportObj.level, time, timeRatio })
-  } else {
-    storeResult({ type: reportObj.type, formula: reportObj.formula, answer: reportObj.answer, level: reportObj.level })
-  }
-}
 
 const isAnswerComplete = (input: string, problemValue: problemType): boolean => {
   const answerString = '' + problemValue.answer
   return input.length === answerString.length
-}
-
-const determineAttackType = (startTime: number, duration: number) : string => {
-   const responseTime = new Date().getTime() - startTime
-   const timePercentage = responseTime / duration
-   if (timePercentage >= 0.66) {
-     return 'attack1'
-   } else if (timePercentage >= 0.33) {
-     return 'attack2'
-   } else if (timePercentage >= 0) {
-     return 'attack3'
-   }
-  return 'attack1'
-}
-
-const shouldMakeHarder = (attackType: string) : boolean => ['attack2', 'attack3'].includes(attackType)
-
-const handleCorrectAnswer = (attackDurationPeek: attackDurationType, attackTimerPeek: attackTimerType, reportObj: resultType, problemPeek: problemType) => {
-  const { startTime, state } = attackTimerPeek
-  const { duration } = attackDurationPeek
-  reportObj.type = 'correct'
-  clearDamage()
-  if (state === 'running') {
-    reportResult(reportObj, attackTimerPeek, attackDurationPeek)
-    const attackType: string = determineAttackType(startTime, duration)
-    attack(attackType, problemPeek.answer)
-    shouldMakeHarder(attackType) && decreaseDuration()
-  } else {
-    reportResult(reportObj)
-    attack('attack1', problemPeek.answer)
-  }
-}
-const handleWrongAnswer = (attackDurationPeek: attackDurationType, attackTimerPeek: attackTimerType, reportObj: resultType, failCallback: () => void) => {
-  const { state } = attackTimerPeek
-  reportObj.type = 'wrong'
-  if (state === 'running') {
-    reportResult(reportObj, attackTimerPeek, attackDurationPeek)
-  } else {
-    reportResult(reportObj)
-  }
-  failCallback()
 }
 
 export const useCalcualtor = () => {
@@ -103,7 +52,8 @@ export const useCalcualtor = () => {
     if (problem.value.answer === parseInt(output.value)) {
       handleCorrectAnswer(attackDurationPeek, attackTimerPeek, reportObj, problemPeek)
     } else {
-      handleWrongAnswer(attackDurationPeek, attackTimerPeek, reportObj, fail)
+      handleWrongAnswer(attackDurationPeek, attackTimerPeek, reportObj)
+      fail()
     }
   }
 
@@ -135,10 +85,12 @@ export const useCalcualtor = () => {
 
   const shouldDisplayProblem = (commandValue: commandType, levelValue: levelType, loadingValue: boolean): boolean => {
     const isIdle = commandValue.type === 'idle'
-    const eHealthPeek = enemyHealth.peek()
-    const attackTimePeek = attackTimer.peek()
+    const enemyAlive = enemyHealth.peek().current !== 0
+    const timerReady = attackTimer.peek().state.includes('init') || attackTimer.peek().state.includes('running')
+    const notLoadingCalculator = !loadingValue
+    const notLoadingNewLevel = levelValue.state !== 'loading'
 
-    return levelValue.state !== 'loading' && isIdle && !loadingValue && (attackTimePeek.state.includes('init') || attackTimePeek.state.includes('running')) && eHealthPeek.current !== 0
+    return notLoadingNewLevel && isIdle && notLoadingCalculator && timerReady && enemyAlive
   }
 
   //codescene
@@ -167,7 +119,11 @@ export const useCalcualtor = () => {
     window.addEventListener('keypress', handleKeyPress)
     timerRef.current = effect(() => {
       if (attackTimer.value.state === 'miss') {
-        reportResult({ type: 'timeout', formula: problem.peek().text, answer: 0, level: level.peek().current }, attackTimer.peek())
+        const attackTimerPeek = attackTimer.peek()
+        const problemPeek = problem.peek()
+        const levelPeek = level.peek()
+        const reportObj: resultType = { type: 'timeout', formula: problemPeek.text, answer: 0, level: levelPeek.current }
+        handleTimeout(attackTimerPeek, reportObj)
         fail()
       }
     })
