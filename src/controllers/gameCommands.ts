@@ -14,6 +14,41 @@ export const idle = () => {
     command.value = { type: 'idle', value: 0 }
   }
 }
+export const idle2 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle2', value: 0 }
+  }
+}
+export const idle3 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle3', value: 0 }
+  }
+}
+export const idle4 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle4', value: 0 }
+  }
+}
+export const idle5 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle5', value: 0 }
+  }
+}
+export const idle6 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle6', value: 0 }
+  }
+}
+export const idle7 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle7', value: 0 }
+  }
+}
+export const idle8 = () => {
+  if (command.peek().type !== 'idle') {
+    command.value = { type: 'idle8', value: 0 }
+  }
+}
 
 // tell game engine to run attack sequence
 export const attack = (action: string, dmg: number) => {
